@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>100 Khái niệm Nền tảng — Giải quyết Vấn đề</title>
+<style>
+  :root{
+    --paper:#F7F5F0; --card:#FFFFFF; --ink:#1A1917; --ink-soft:#6B645C;
+    --line:#DDD8CC; --accent:#2D6CA0; --ring:rgba(45,108,160,.20);
+    --c1:#2D6CA0; --c2:#16A34A; --c3:#DB2777; --c4:#D97706;
+    --c5:#7C3AED; --c6:#0891B2; --c7:#DC2626; --c8:#9333EA;
+    --c9:#15803D; --c10:#B45309;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{background:var(--paper);color:var(--ink);font-family:-apple-system,"Segoe UI","Helvetica Neue",Arial,sans-serif;}
+  body{line-height:1.5;padding-bottom:80px;}
+
+  header{max-width:1120px;margin:0 auto;padding:52px 28px 32px;border-bottom:1px solid var(--line);}
+  .eyebrow{letter-spacing:.18em;text-transform:uppercase;font-size:11px;font-weight:700;color:var(--accent);margin-bottom:12px;}
+  h1{font-size:clamp(32px,5.5vw,56px);font-weight:800;letter-spacing:-0.02em;line-height:1.07;}
+  h1 em{color:var(--accent);font-style:normal;}
+  .subtitle{margin-top:12px;max-width:660px;color:var(--ink-soft);font-size:15.5px;line-height:1.62;}
+  .quote-bar{margin-top:18px;max-width:600px;font-size:14px;color:var(--ink-soft);font-style:italic;border-left:3px solid var(--accent);padding-left:14px;line-height:1.58;}
+
+  .controls{max-width:1120px;margin:26px auto 0;padding:0 28px;}
+  .search-wrap{position:relative;margin-bottom:16px;}
+  #search{width:100%;font-size:15.5px;padding:13px 18px 13px 44px;border:1.5px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);outline:none;transition:border-color .15s,box-shadow .15s;}
+  #search:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--ring);}
+  .search-icon{position:absolute;left:15px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--ink-soft);pointer-events:none;}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{border:1.5px solid var(--line);background:var(--card);color:var(--ink-soft);font-size:13px;font-weight:600;padding:6px 14px;border-radius:999px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px;-webkit-tap-highlight-color:transparent;white-space:nowrap;}
+  .chip .dot{width:7px;height:7px;border-radius:50%;background:var(--dotcolor,#bbb);flex-shrink:0;}
+  .chip:hover{border-color:var(--accent);color:var(--ink);}
+  .chip.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .chip.active .dot{background:#fff;}
+  .count-row{max-width:1120px;margin:14px auto 0;padding:0 28px;font-size:13px;color:var(--ink-soft);}
+
+  .grid{max-width:1120px;margin:16px auto 0;padding:0 28px;display:grid;grid-template-columns:repeat(auto-fill,minmax(295px,1fr));gap:16px;align-items:start;}
+
+  .card{background:var(--card);border:1.5px solid var(--line);border-radius:14px;overflow:hidden;transition:box-shadow .15s,border-color .2s;}
+  .card:hover{box-shadow:0 4px 24px -8px rgba(45,108,160,.18);border-color:color-mix(in srgb,var(--cc) 38%,var(--line));}
+  .card-header{padding:18px 18px 14px;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none;}
+  .card-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+  .card-num{font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--cc);}
+  .cat-badge{font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--cc);background:color-mix(in srgb,var(--cc) 12%,white);padding:3px 9px;border-radius:6px;}
+  .card-title{font-size:18px;font-weight:700;line-height:1.25;color:var(--ink);margin-bottom:3px;}
+  .card-en{font-size:12px;font-weight:500;color:var(--ink-soft);margin-bottom:10px;letter-spacing:.01em;}
+  .card-short{font-size:13.5px;color:var(--ink-soft);line-height:1.56;}
+  .card-short strong{color:var(--cc);}
+  .card-toggle{display:inline-flex;align-items:center;gap:5px;margin-top:12px;font-size:12.5px;font-weight:700;color:var(--cc);}
+  .card-toggle .arr{width:14px;height:14px;transition:transform .22s cubic-bezier(.4,0,.2,1);}
+  .card-toggle.open .arr{transform:rotate(180deg);}
+
+  .card-body{max-height:0;overflow:hidden;transition:max-height .38s cubic-bezier(.4,0,.2,1);}
+  .card-body.open{max-height:1600px;}
+  .card-body-inner{padding:0 18px 20px;border-top:1px solid var(--line);margin-top:2px;}
+
+  .section{margin-top:16px;}
+  .section-label{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--cc);margin-bottom:8px;}
+  .section-label svg{width:13px;height:13px;flex-shrink:0;}
+  .section-text{font-size:14.5px;line-height:1.72;color:var(--ink);}
+  .section-text strong{color:var(--cc);font-weight:700;}
+  .example-box{background:color-mix(in srgb,#D97706 8%,var(--paper));border-left:3px solid #D97706;border-radius:8px;padding:12px 14px;font-size:14px;line-height:1.65;font-style:italic;color:var(--ink);}
+  .example-box strong{font-style:normal;color:#92400E;font-weight:700;}
+  .takeaway-box{background:color-mix(in srgb,var(--cc) 8%,#fff);border-radius:8px;padding:12px 14px;font-size:14px;line-height:1.60;color:var(--ink);}
+  .takeaway-box strong{color:var(--cc);font-weight:700;}
+
+  .no-results{max-width:1120px;margin:50px auto;padding:0 28px;text-align:center;color:var(--ink-soft);display:none;}
+  footer{max-width:1120px;margin:50px auto 0;padding:22px 28px 0;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink-soft);text-align:center;}
+
+  @media(max-width:600px){
+    header,.controls,.count-row,.grid,footer{padding-left:16px;padding-right:16px;}
+    .grid{grid-template-columns:1fr;gap:12px;}
+    h1{font-size:32px;}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">Bộ công cụ tư duy · 100 khái niệm nền tảng</div>
+  <h1>Tinh tuý <em>Giải quyết Vấn đề</em></h1>
+  <p class="subtitle">100 khái niệm cốt lõi về giải quyết vấn đề — từ tư duy định khung, phân tích nguyên nhân, sáng tạo giải pháp, đến tư duy hệ thống, ra quyết định và thực thi. Từ khoá quan trọng được <strong>in đậm</strong> với thuật ngữ tiếng Anh trong ngoặc. Bấm vào thẻ để mở — thẻ cũ tự đóng.</p>
+  <p class="quote-bar">"Nếu tôi có một giờ để giải quyết một vấn đề và cuộc đời tôi phụ thuộc vào đó — tôi sẽ dành 55 phút để định nghĩa vấn đề và 5 phút để tìm giải pháp." — Albert Einstein</p>
+</header>
+
+<div class="controls">
+  <div class="search-wrap">
+    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" id="search" placeholder="Tìm khái niệm... (ví dụ: 5 whys, MECE, tư duy hệ thống)" autocomplete="off">
+  </div>
+  <div class="chips" id="chips"></div>
+</div>
+<div class="count-row" id="countRow"></div>
+<div class="grid" id="grid"></div>
+<div class="no-results" id="noResults">Không tìm thấy khái niệm phù hợp. Hãy thử từ khoá khác.</div>
+<footer>100 khái niệm nền tảng về Giải quyết Vấn đề · Bấm vào thẻ để mở — thẻ cũ tự đóng · Lưu trang để dùng offline</footer>
+
+<script>
+const CATS=[
+  {key:"dinhnghia",  label:"Định nghĩa & Khung vấn đề",   color:"var(--c1)"},
+  {key:"phanra",     label:"Phân rã & Cấu trúc hoá",      color:"var(--c2)"},
+  {key:"nguyen",     label:"Tìm nguyên nhân gốc rễ",      color:"var(--c3)"},
+  {key:"sangtao",    label:"Tư duy sáng tạo",             color:"var(--c4)"},
+  {key:"mohinh",     label:"Mô hình tư duy & Mental Models",color:"var(--c5)"},
+  {key:"hethong",    label:"Tư duy hệ thống",             color:"var(--c6)"},
+  {key:"thunghiem",  label:"Thử nghiệm & Kiểm chứng",    color:"var(--c7)"},
+  {key:"thongtin",   label:"Thu thập & Đánh giá thông tin",color:"var(--c8)"},
+  {key:"tamly",      label:"Tâm lý & Rào cản nhận thức",  color:"var(--c9)"},
+  {key:"thuchien",   label:"Thực thi & Cải tiến liên tục",color:"var(--c10)"},
+];
+const DATA=[
+// ===== 1. ĐỊNH NGHĨA & KHUNG VẤN ĐỀ =====
+{cat:"dinhnghia",vi:"Định nghĩa vấn đề",en:"Problem Definition",
+short:"Hầu hết quyết định tệ đến từ việc giải <strong>sai vấn đề</strong> — định nghĩa vấn đề chính xác là bước quan trọng nhất, thường bị bỏ qua khi mọi người vội vàng tìm giải pháp.",
+detail:"John Dewey: <strong>«Vấn đề được định nghĩa tốt là vấn đề được giải phân nửa.»</strong> Lỗi phổ biến khi định nghĩa vấn đề: (1) <strong>Mô tả triệu chứng (symptom) thay vì vấn đề gốc</strong> — «doanh số giảm» là triệu chứng, không phải vấn đề; (2) <strong>Giải pháp được ngụ ý sẵn trong định nghĩa</strong> — «làm sao tăng quảng cáo để tăng doanh số?» đã loại bỏ mọi hướng không liên quan đến quảng cáo; (3) <strong>Phạm vi quá hẹp hoặc quá rộng</strong>. Công cụ làm rõ: <strong>5 Whys</strong> để đào sâu đến gốc rễ; <strong>How Might We (HMW)</strong> để mở rộng không gian giải pháp; tái định nghĩa bằng góc nhìn khác.",
+example:"Vấn đề ban đầu: «Thang máy quá chậm». Giải pháp hiển nhiên: nâng cấp động cơ — đắt và mất nhiều tháng. Sau khi định nghĩa lại: vấn đề thực là «người đợi <strong>cảm thấy</strong> mất thời gian». Giải pháp mới: lắp gương và màn hình TV ở khu vực đợi — chi phí thấp hơn 10 lần, khiếu nại giảm hoàn toàn.",
+takeaway:"Dành <strong>ít nhất 30% thời gian</strong> cho việc định nghĩa vấn đề trước khi tìm giải pháp. Hỏi: <strong>«Đây có thực sự là vấn đề, hay chỉ là triệu chứng của một vấn đề sâu hơn?»</strong>"},
+
+{cat:"dinhnghia",vi:"Tái định khung vấn đề",en:"Problem Reframing",
+short:"Cách <strong>đặt khung (frame)</strong> cho vấn đề quyết định không gian giải pháp — thay đổi khung là thay đổi toàn bộ hướng tìm kiếm, thường mở ra những lối thoát mà khung cũ không thể thấy.",
+detail:"Mỗi cách định nghĩa vấn đề là một «khung» (frame) — và khung đó vừa mở ra vừa đóng lại những hướng giải pháp. Kỹ thuật tái định khung: (1) <strong>Đảo ngược (inversion)</strong> — thay vì «làm sao tăng khách hàng», hỏi «điều gì đang đuổi khách hàng đi?»; (2) <strong>Phóng to / thu nhỏ</strong> — thay đổi quy mô vấn đề; (3) <strong>Đổi góc nhìn (perspective shift)</strong> — nhìn từ góc độ khách hàng, đối thủ, bên thứ ba; (4) <strong>Thay đổi mục tiêu ẩn</strong> — vấn đề này thực sự đang phục vụ mục tiêu gì? Munger và Buffett nổi tiếng dùng <strong>inversion</strong>: «nghĩ về điều tệ nhất có thể xảy ra» trước.",
+example:"Apple reframe: thay vì «làm sao cải thiện máy nghe nhạc», họ hỏi «làm sao đặt 1000 bài hát vào túi bạn?». Uber reframe: thay vì «làm sao cải thiện dịch vụ taxi», họ hỏi «làm sao kết nối người cần đi và người có xe nhàn rỗi?». Cùng vấn đề di chuyển — khung khác nhau dẫn đến giải pháp hoàn toàn khác.",
+takeaway:"Khi bế tắc với vấn đề, <strong>viết lại định nghĩa vấn đề theo ít nhất 3 cách khác nhau</strong>. Dùng inversion: «điều gì chắc chắn sẽ khiến vấn đề tệ hơn?» — tránh những điều đó chính là bước giải quyết."},
+
+{cat:"dinhnghia",vi:"Khung 5W1H",en:"5W1H Framework",
+short:"Sáu câu hỏi hệ thống — <strong>Who, What, When, Where, Why, How</strong> (Ai, Cái gì, Khi nào, Ở đâu, Tại sao, Như thế nào) — giúp mô tả vấn đề toàn diện và phát hiện điểm chưa rõ trước khi tìm giải pháp.",
+detail:"5W1H xuất phát từ báo chí điều tra nhưng được áp dụng rộng rãi trong giải quyết vấn đề. Giá trị thực: mỗi câu hỏi «W» thường lộ ra một chiều hướng mà suy nghĩ tự nhiên bỏ qua. <strong>When</strong> (khi nào): vấn đề có theo chu kỳ không? Chỉ xảy ra giờ cao điểm? <strong>Where</strong>: chỉ ở một địa điểm hay phổ biến? <strong>Who</strong>: ai bị ảnh hưởng — khách hàng VIP hay khách thường? Tất cả hay một nhóm cụ thể? Khi trả lời đầy đủ 6 câu hỏi, thường <strong>câu trả lời giải pháp tự xuất hiện</strong> mà không cần brainstorm thêm.",
+example:"Vấn đề «đơn hàng bị giao trễ»: Who (khách ở khu vực nào?), What (loại sản phẩm nào?), When (cuối tuần hay ngày thường?), Where (kho xuất hàng nào?), Why (hết hàng, lỗi vận chuyển, hay nhập địa chỉ sai?), How (quy trình xử lý đơn hiện tại thế nào?). Hóa ra 80% đơn trễ xảy ra thứ Sáu do kho đóng cửa sớm — giải pháp: thay đổi lịch kho, không phải tuyển thêm shipper.",
+takeaway:"Trước khi brainstorm giải pháp, <strong>trả lời đầy đủ 6 câu hỏi 5W1H</strong>. Câu hỏi nào chưa có câu trả lời rõ ràng — đó là điểm mù cần khảo sát thêm trước khi tiến tiếp."},
+
+{cat:"dinhnghia",vi:"Phân tích khoảng cách",en:"Gap Analysis",
+short:"Xác định rõ <strong>trạng thái hiện tại (current state)</strong> và <strong>trạng thái mong muốn (desired state)</strong> — khoảng cách giữa hai điểm này chính là vấn đề cần giải quyết, và độ lớn khoảng cách định nghĩa độ ưu tiên.",
+detail:"Gap Analysis là công cụ nền tảng trước khi giải bất kỳ vấn đề nào. Tại sao quan trọng: nhiều cuộc thảo luận «giải quyết vấn đề» lẫn lộn vì mọi người nói về hiện trạng hoặc mong muốn mà không làm rõ cả hai. Khi cả hai điểm được mô tả cụ thể bằng số liệu, khoảng cách trở thành mục tiêu — và mọi giải pháp đề xuất có thể được đánh giá theo câu hỏi «nó có lấp đầy khoảng cách đó không?». Ba loại gap phổ biến: (1) <strong>Performance gap</strong> — đang làm vs muốn làm; (2) <strong>Compliance gap</strong> — thực tế vs quy chuẩn; (3) <strong>Market gap</strong> — nhu cầu vs cung cấp hiện có.",
+example:"Nhóm bán hàng đang đạt 800 triệu/tháng (hiện trạng) với mục tiêu 1,2 tỷ/tháng (mong muốn) — khoảng cách 400 triệu là «vấn đề». Việc định lượng giúp đánh giá: thêm 2 nhân viên (tăng ~200 triệu) có đủ không? Cần giải pháp kết hợp: mở kênh online (+150 triệu) + tăng giá trị đơn hàng trung bình (+100 triệu) + tuyển thêm (+150 triệu).",
+takeaway:"Luôn bắt đầu bằng cách đo lường và ghi rõ <strong>hiện trạng bằng số liệu</strong>, rồi mới xác định mong muốn. Nếu không đo được hiện trạng — đó là vấn đề cần giải quyết trước."},
+
+{cat:"dinhnghia",vi:"Xác định ràng buộc và giả định ẩn",en:"Constraints and Hidden Assumptions",
+short:"Mọi vấn đề đều được giải trong một <strong>không gian ràng buộc (constraint space)</strong> — nhưng nhiều ràng buộc chỉ là giả định chưa được kiểm tra. Phân biệt ràng buộc thật và giả định giúp mở ra giải pháp mới.",
+detail:"Có hai loại ràng buộc: (1) <strong>Ràng buộc cứng (hard constraints)</strong> — vật lý, pháp lý, đạo đức: không thể vượt qua; (2) <strong>Ràng buộc mềm (soft constraints)</strong> — thói quen, quy ước, niềm tin chưa kiểm chứng: có thể thách thức. Phần lớn «không thể» trong giải quyết vấn đề là ràng buộc mềm được coi là cứng. Kỹ thuật nhận diện: hỏi <strong>«Điều gì sẽ xảy ra nếu chúng ta BỎ ràng buộc này?»</strong> — nếu câu trả lời mở ra giải pháp mới khả thi, đó là ràng buộc mềm. <strong>First Principles Thinking</strong> (Elon Musk) là cách hệ thống để phá vỡ ràng buộc giả định: phân tích từ sự thật vật lý cơ bản thay vì «cách người ta vẫn làm».",
+example:"Elon Musk: «Pin cho xe điện luôn đắt vì đó là lịch sử». First principles: pin gồm cobalt, nickel, lithium, polymer — giá nguyên liệu thô chỉ bằng 1/6 giá pin thành phẩm. Ràng buộc «pin đắt» là giả định về chuỗi cung ứng hiện tại, không phải bản chất vật lý. Tự xây nhà máy và đặt hàng trực tiếp nguyên liệu → giảm giá pin 80%.",
+takeaway:"Liệt kê tất cả ràng buộc khi tiếp cận vấn đề, sau đó <strong>đặt dấu hỏi trước từng cái</strong>: «Đây là ràng buộc vật lý/pháp lý thật, hay chỉ là cách người ta vẫn làm?» Ràng buộc mềm nào mà bỏ đi mở ra giải pháp tốt hơn — đó chính là điểm đòn bẩy."},
+
+{cat:"dinhnghia",vi:"Tư duy từ nguyên lý đầu tiên",en:"First Principles Thinking",
+short:"Phá vỡ vấn đề xuống các <strong>sự thật cơ bản nhất không thể tranh cãi</strong>, rồi xây dựng lại từ đó — thay vì suy luận bằng cách tương tự (<strong>reasoning by analogy</strong>) từ những gì người khác đã làm.",
+detail:"Aristotle định nghĩa: <strong>«nguyên lý đầu tiên là điều kiện cơ bản nhất để hiểu một thứ gì đó»</strong>. Elon Musk phổ biến trong bối cảnh kinh doanh. Hai cách tiếp cận đối lập: <strong>Reasoning by analogy</strong> (tương tự): «người ta làm vậy, nên tôi cũng làm vậy» — nhanh nhưng bị giới hạn bởi những gì đã tồn tại; <strong>First principles</strong>: «sự thật cơ bản ở đây là gì, và nếu bắt đầu từ đó thì giải pháp tốt nhất là gì?» — chậm hơn nhưng có thể tạo ra đột phá. Quy trình: (1) Xác định vấn đề; (2) Phá vỡ các giả định; (3) Tìm sự thật cơ bản; (4) Xây dựng lại từ đó.",
+example:"Hàng không giá rẻ: tất cả hãng bay tin rằng «trải nghiệm tiện nghi là yếu tố cạnh tranh» (reasoning by analogy). Southwest Airlines hỏi: sự thật cơ bản là gì? Khách hàng muốn đến điểm B an toàn với giá rẻ nhất. Bỏ tất cả «tiện nghi» không cần thiết, đơn giản hóa vận hành — tạo ra mô hình hàng không giá rẻ thay đổi ngành.",
+takeaway:"Khi cảm thấy mọi hướng đều đã thử: <strong>hỏi «Sự thật vật lý/kinh tế cơ bản nhất ở đây là gì?»</strong> Sau đó xây dựng lại giải pháp từ đó, không phải từ thực hành ngành. Phân biệt: <strong>ràng buộc vật lý</strong> (không thể thay đổi) vs <strong>ràng buộc thông lệ</strong> (có thể thay đổi)."},
+
+{cat:"dinhnghia",vi:"Tiêu chí thành công rõ ràng",en:"Success Criteria",
+short:"Xác định rõ ràng <strong>thành công trông như thế nào</strong> — cụ thể, đo được, trước khi bắt đầu tìm giải pháp — tránh «goalpost moving» sau khi biết kết quả và đảm bảo mọi người hiểu chung một mục tiêu.",
+detail:"Không có tiêu chí thành công rõ ràng, một nhóm có thể đề xuất hàng chục giải pháp «có vẻ tốt» nhưng không ai biết giải pháp nào thực sự giải quyết được vấn đề ban đầu. <strong>«Goalpost moving»</strong>: khi tiêu chí thay đổi sau khi biết kết quả — để bảo toàn cái tôi hoặc ngân sách — ngăn cản học hỏi thực sự. Framework đặt tiêu chí tốt: <strong>SMART</strong> (Specific, Measurable, Achievable, Relevant, Time-bound). Quan trọng hơn: phân biệt (1) <strong>Leading indicators</strong> — dấu hiệu sớm đang đi đúng hướng; (2) <strong>Lagging indicators</strong> — kết quả cuối cùng.",
+example:"Thay vì mục tiêu mơ hồ «cải thiện dịch vụ khách hàng», tiêu chí rõ ràng: «Trong 90 ngày, NPS tăng từ 32 lên 50, thời gian phản hồi trung bình giảm từ 24 giờ xuống 4 giờ, và tỷ lệ giải quyết ngay lần đầu (FCR) tăng từ 60% lên 80%.» Ba chỉ số cụ thể, có deadline, và mọi giải pháp đề xuất đều có thể đánh giá dựa trên chúng.",
+takeaway:"Trước khi brainstorm giải pháp, viết xuống: <strong>«Chúng ta sẽ biết vấn đề đã được giải quyết khi thấy [chỉ số X] đạt [giá trị Y] trong vòng [thời gian Z].»</strong> Nếu không điền được — cần làm rõ thêm về vấn đề trước."},
+
+{cat:"dinhnghia",vi:"Phân tích các bên liên quan",en:"Stakeholder Analysis",
+short:"Xác định <strong>tất cả những người bị ảnh hưởng</strong> bởi vấn đề và giải pháp — hiểu quan điểm, lợi ích và quyền lực của họ là điều kiện để giải pháp được chấp nhận và thực thi hiệu quả.",
+detail:"Nhiều giải pháp «đúng về kỹ thuật» thất bại vì bỏ qua stakeholders — những người sẽ thực thi, bị ảnh hưởng, hoặc có quyền phủ quyết. Ma trận stakeholder (Power vs Interest): (1) <strong>High Power, High Interest</strong>: quản lý chặt chẽ — tham gia sâu vào quá trình; (2) <strong>High Power, Low Interest</strong>: giữ hài lòng — báo cáo đủ nhưng không làm phiền; (3) <strong>Low Power, High Interest</strong>: cung cấp thông tin đầy đủ; (4) <strong>Low Power, Low Interest</strong>: theo dõi đơn giản. Trong giải quyết vấn đề: stakeholders thường <strong>là nguồn thông tin quan trọng nhất</strong> về vấn đề thực sự và rào cản thực thi.",
+example:"Một dự án cải tiến quy trình HR thất bại dù được thiết kế kỹ: các quản lý cấp trung (high power, high interest) không được hỏi ý kiến — họ coi quy trình mới là thêm việc, âm thầm không tuân thủ. Nếu phân tích stakeholder từ đầu và mời họ vào thiết kế, quy trình sẽ tính đến nhu cầu thực tế của họ.",
+takeaway:"Trước khi thiết kế giải pháp, vẽ <strong>bản đồ stakeholders</strong>: ai bị ảnh hưởng? Ai có quyền phủ quyết? Ai có thông tin quan trọng? Ai cần được thuyết phục? Tham khảo ý kiến của nhóm «High Power, High Interest» từ sớm."},
+
+{cat:"dinhnghia",vi:"Phân biệt triệu chứng và vấn đề gốc",en:"Symptoms vs Root Problems",
+short:"<strong>Triệu chứng (symptom)</strong> là biểu hiện bề mặt; <strong>vấn đề gốc (root problem)</strong> là nguyên nhân nền tảng tạo ra triệu chứng. Giải quyết triệu chứng mà không chạm đến gốc rễ đảm bảo vấn đề sẽ tái phát.",
+detail:"Sự khác biệt then chốt trong giải quyết vấn đề. Ví dụ y học: sốt là triệu chứng — uống hạ sốt giải quyết triệu chứng nhưng không chữa viêm phổi gây sốt. Trong kinh doanh: nhân viên đi làm muộn (triệu chứng) — phạt tiền giải quyết triệu chứng nhưng không giải quyết lý do thực: không có phương tiện đáng tin cậy, ca làm việc không phù hợp, hoặc thiếu động lực vì văn hóa độc hại. Dấu hiệu đang giải triệu chứng: (1) Cùng vấn đề tái xuất nhiều lần; (2) Giải pháp phải duy trì liên tục mới có hiệu quả; (3) Giải một vấn đề tạo ra vấn đề khác.",
+example:"Website bị tấn công nhiều lần. Giải pháp triệu chứng: vá từng lỗ hổng sau mỗi vụ tấn công. Vấn đề gốc: không có quy trình security review trong phát triển phần mềm — lỗ hổng được tạo ra liên tục. Giải pháp gốc: xây dựng quy trình DevSecOps, bắt buộc security testing trước mỗi release.",
+takeaway:"Khi vấn đề tái phát, tự hỏi: <strong>«Tôi đang giải quyết triệu chứng hay gốc rễ?»</strong> Nếu giải pháp cần được áp dụng lại liên tục để duy trì hiệu quả — đó là dấu hiệu đang xử lý triệu chứng."},
+
+{cat:"dinhnghia",vi:"Tư duy đảo ngược",en:"Inversion Thinking",
+short:"Thay vì hỏi «làm sao để đạt X», hỏi <strong>«làm sao để chắc chắn KHÔNG đạt X»</strong> — rồi tránh những điều đó. Munger: <strong>«Đảo ngược, luôn đảo ngược.»</strong>",
+detail:"Nhà toán học Jacobi: <strong>«man muss immer umkehren»</strong> — luôn đảo ngược. Munger áp dụng vào giải quyết vấn đề: thay vì chỉ hỏi «làm sao để thành công», ông hỏi «làm sao để chắc chắn thất bại, và tránh những điều đó». Tại sao hiệu quả: (1) <strong>Dễ hình dung thất bại hơn thành công</strong> — não tự nhiên nhận diện rủi ro tốt hơn cơ hội; (2) <strong>Tìm ra blind spots</strong> — tư duy thuận chiều bỏ qua những rào cản ẩn; (3) <strong>Ngăn chặn thường dễ hơn tạo ra</strong> — nhiều vấn đề được giải chỉ bằng cách ngừng làm điều đang gây ra chúng. Công cụ cụ thể: <strong>Pre-mortem</strong> — hình dung dự án đã thất bại và truy tìm nguyên nhân.",
+example:"Muốn xây văn hóa công ty tốt: thay vì chỉ brainstorm «cần thêm gì», hỏi «điều gì chắc chắn phá hủy văn hóa?» → không thưởng dựa trên kết quả, thiếu minh bạch, sếp không làm gương, thưởng/phạt không nhất quán. Danh sách «cần tránh» này thường hữu ích hơn danh sách «nên làm» vì cụ thể và dễ kiểm tra hơn.",
+takeaway:"Với mọi vấn đề quan trọng, <strong>lập danh sách «điều gì chắc chắn sẽ làm thất bại»</strong> trước khi tìm giải pháp. Đảm bảo không mắc phải những điều đó — thường đây là 80% của giải pháp."},
+
+// ===== 2. PHÂN RÃ & CẤU TRÚC HOÁ =====
+{cat:"phanra",vi:"Phân rã vấn đề",en:"Problem Decomposition",
+short:"Chia vấn đề lớn thành các <strong>phần nhỏ hơn, độc lập hơn</strong> — mỗi phần có thể phân tích và giải quyết riêng. Não người không thể xử lý quá nhiều thứ cùng lúc; phân rã là cách quản lý độ phức tạp.",
+detail:"Vấn đề lớn gây cảm giác choáng ngợp không phải vì khó về bản chất, mà vì chứa quá nhiều yếu tố cùng lúc vượt quá <strong>working memory</strong> (bộ nhớ làm việc). Phân rã giải phóng băng thông nhận thức. Nguyên tắc phân rã tốt: (1) <strong>Theo chiều dọc (vertical)</strong>: từ tổng quát đến cụ thể — vẽ cây vấn đề; (2) <strong>Theo chiều ngang (horizontal)</strong>: chia theo thành phần độc lập — quy trình, bộ phận, thời gian; (3) Mỗi phần nên có <strong>owner rõ ràng</strong> có thể chịu trách nhiệm. Cạm bẫy: phân rã theo ranh giới tổ chức thay vì ranh giới vấn đề — tạo ra «silo» giải quyết vấn đề.",
+example:"Doanh số giảm là vấn đề lớn, khó giải trực tiếp. Phân rã theo công thức: Doanh số = Số khách hàng × Tỷ lệ mua × Giá trị đơn hàng trung bình. Mỗi biến lại được phân rã: Số khách hàng = Nhận biết × Cân nhắc × Chuyển đổi. Đột nhiên team có 9 vấn đề nhỏ cụ thể, đo được, có thể giao cho từng người phụ trách.",
+takeaway:"Khi vấn đề trông quá lớn để bắt đầu, <strong>hỏi «vấn đề này gồm những phần nào?»</strong> Tiếp tục phân rã cho đến khi mỗi phần đủ nhỏ để một người có thể phân tích và hành động trong một tuần."},
+
+{cat:"phanra",vi:"Nguyên tắc MECE",en:"MECE Principle",
+short:"Khi phân chia vấn đề thành các phần, các phần đó nên <strong>Mutually Exclusive</strong> (loại trừ nhau — không chồng lấp) và <strong>Collectively Exhaustive</strong> (toàn diện — không bỏ sót). Tiêu chuẩn của McKinsey và tư vấn chiến lược.",
+detail:"MECE là tiêu chuẩn cho cách phân loại/phân rã «tốt». Nếu các phần <strong>chồng lấp</strong>: công sức bị lãng phí vào việc giải quyết cùng một thứ hai lần, hoặc gây nhầm lẫn về ai chịu trách nhiệm phần nào. Nếu có <strong>lỗ hổng (gaps)</strong>: một phần quan trọng của vấn đề bị bỏ qua hoàn toàn mà không ai nhận ra. Kiểm tra MECE: (1) «Hai phần này có thể xảy ra đồng thời không?» — nếu có → không mutually exclusive; (2) «Nếu cộng tất cả các phần lại, có bao gồm 100% vấn đề không?» — nếu không → không collectively exhaustive.",
+example:"Phân loại «lý do khách hàng rời bỏ» thành «giá cao», «chất lượng kém», «chuyển sang đối thủ» — không MECE vì «chuyển sang đối thủ» có thể vì giá hoặc chất lượng (chồng lấp). Phân loại MECE hơn: «Yếu tố từ công ty» (giá, chất lượng, dịch vụ) và «Yếu tố từ khách hàng» (nhu cầu thay đổi, tình hình tài chính) và «Yếu tố từ cạnh tranh» (offer tốt hơn từ đối thủ) — ba nhóm không chồng lấp, cộng lại bao phủ toàn bộ.",
+takeaway:"Mỗi khi phân chia vấn đề hay phân tích nguyên nhân, <strong>kiểm tra MECE</strong>: «Các phần này có chồng lấp không? Có phần nào bị bỏ sót không?» Không cần hoàn hảo tuyệt đối — nhưng lỗ hổng lớn và chồng lấp nặng làm sai lệch cả phân tích."},
+
+{cat:"phanra",vi:"Cây vấn đề (Issue Tree)",en:"Issue Tree",
+short:"Biểu đồ phân cấp hình cây: <strong>vấn đề gốc</strong> ở trên, phân nhánh thành các <strong>vấn đề con</strong> theo nguyên tắc MECE — giúp trực quan hóa toàn bộ cấu trúc vấn đề và xác định đâu cần phân tích sâu hơn.",
+detail:"Issue Tree là công cụ trung tâm của tư vấn chiến lược McKinsey, BCG, Bain. Hai loại cây phổ biến: (1) <strong>Diagnostic tree (cây chẩn đoán)</strong> — chia vấn đề thành nguyên nhân có thể: «Tại sao X?» → A hoặc B hoặc C; (2) <strong>Solution tree (cây giải pháp)</strong> — chia giải pháp thành các hành động: «Để giải X, có thể làm A hoặc B hoặc C». Quy trình làm việc với issue tree: (1) Xác định vấn đề gốc rõ ràng; (2) Phân nhánh MECE ở mỗi cấp; (3) Đánh giá từng nhánh — nhánh nào «không vấn đề» thì loại; (4) Đào sâu vào nhánh còn lại; (5) Đi đến hypotheses và data cần kiểm chứng.",
+example:"Câu hỏi: «Tại sao lợi nhuận giảm?». Cây: Lợi nhuận = Doanh thu − Chi phí. Nhánh Doanh thu: giảm do Giá thấp hơn HOẶC Khối lượng ít hơn. Nhánh Chi phí: tăng do Chi phí cố định HOẶC Chi phí biến đổi. Sau khi kiểm tra dữ liệu: Giá ổn định, Khối lượng giảm 15%, Chi phí cố định tăng. Cây đã loại 2/4 nhánh và tập trung vào 2 nhánh thực sự cần giải quyết.",
+takeaway:"Trước khi thu thập dữ liệu hay brainstorm giải pháp, <strong>vẽ issue tree đầy đủ</strong>. Cây này giúp bạn biết dữ liệu nào cần thu thập và hypothesis nào cần kiểm chứng — tiết kiệm 50-80% thời gian phân tích."},
+
+{cat:"phanra",vi:"Phân tích Pareto (80/20)",en:"Pareto Analysis",
+short:"<strong>Nguyên lý 80/20</strong>: khoảng 80% kết quả đến từ 20% nguyên nhân — trong giải quyết vấn đề, tập trung vào thiểu số yếu tố tạo ra đa số tác động thay vì cố gắng xử lý tất cả đồng đều.",
+detail:"Vilfredo Pareto quan sát năm 1896: 80% đất đai Italy thuộc 20% dân số. Nguyên lý xuất hiện ở khắp nơi: 20% khách hàng tạo 80% doanh thu; 20% bugs gây 80% crashes; 20% tính năng được 80% người dùng sử dụng. Trong giải quyết vấn đề: trước khi đầu tư nguồn lực, <strong>xếp hạng nguyên nhân/yếu tố theo tác động</strong> và tập trung vào top 20%. Công cụ: biểu đồ Pareto (histogram xếp hạng + đường tích lũy % cho đến khi đạt 80%). Cạm bẫy: áp dụng quá cứng nhắc — trong một số lĩnh vực (an toàn hàng không, y tế), 20% «ít quan trọng» không thể bỏ qua.",
+example:"50 loại complaint của khách hàng được ghi nhận trong tháng. Biểu đồ Pareto cho thấy: 3 loại đầu (không nhận email xác nhận, giao hàng trễ, lỗi thanh toán) chiếm 78% tổng số complaint. Thay vì cố gắng xử lý tất cả 50 loại, team tập trung vào 3 loại này trong Q1 — giảm 75% tổng complaint chỉ bằng 30% nguồn lực.",
+takeaway:"Với mọi danh sách vấn đề/nguyên nhân, <strong>đếm tần suất và vẽ biểu đồ Pareto</strong>. Hỏi: «20% nguyên nhân nào gây ra 80% vấn đề?» Tập trung nguồn lực vào đó trước khi xử lý đuôi dài."},
+
+{cat:"phanra",vi:"Phân tích nhân quả",en:"Causal Analysis",
+short:"Xác định <strong>quan hệ nhân quả (causation)</strong> thực sự thay vì chỉ dừng ở tương quan — vì can thiệp vào yếu tố tương quan không thay đổi được kết quả, chỉ can thiệp vào nguyên nhân thật mới hiệu quả.",
+detail:"<strong>«Correlation is not causation»</strong> — tương quan không phải nhân quả — là nguyên tắc thống kê quan trọng nhất trong giải quyết vấn đề. Ba loại quan hệ cần phân biệt: (1) <strong>Nhân quả thực</strong>: A gây ra B — thay đổi A sẽ thay đổi B; (2) <strong>Tương quan do biến thứ ba (confounding variable)</strong>: A và B cùng bị gây ra bởi C — thay đổi A không thay đổi B; (3) <strong>Tương quan giả (spurious correlation)</strong>: A và B tình cờ tương quan — không có quan hệ thực. Kiểm chứng nhân quả: <strong>thử nghiệm ngẫu nhiên có kiểm soát (RCT)</strong> là tiêu chuẩn vàng; khi không có RCT: tìm <strong>natural experiments</strong> hoặc dùng phân tích hồi quy có kiểm soát biến.",
+example:"Một công ty thấy nhân viên có bàn làm việc đứng (standing desk) năng suất cao hơn — tương quan. Nguyên nhân thật: nhân viên chủ động xin standing desk thường là người có động lực cao hơn (biến thứ ba: motivation). Nếu cung cấp standing desk cho mọi người, năng suất không tăng vì đã can thiệp vào yếu tố tương quan, không phải nhân quả thực.",
+takeaway:"Trước khi triển khai giải pháp, kiểm tra: <strong>«Đây là nhân quả thật hay tương quan? Có biến thứ ba nào ảnh hưởng không?»</strong> Thiết kế thử nghiệm nhỏ để kiểm chứng nhân quả trước khi scale lên."},
+
+{cat:"phanra",vi:"Ma trận ưu tiên",en:"Prioritization Matrix",
+short:"Đánh giá và xếp hạng các vấn đề hoặc giải pháp theo <strong>hai chiều quan trọng nhất</strong> — thường là Tác động (Impact) × Khả năng thực thi (Feasibility) — để tập trung nguồn lực có hạn vào nơi tạo ra giá trị lớn nhất.",
+detail:"Nguồn lực luôn hữu hạn; không thể giải quyết tất cả cùng lúc. Ma trận ưu tiên cấu trúc hóa quyết định phân bổ. Ma trận phổ biến nhất (2×2): <strong>Impact vs Effort</strong>: Quick wins (high impact, low effort) — làm ngay; Major projects (high impact, high effort) — lên kế hoạch; Fill-ins (low impact, low effort) — làm khi có thời gian; Avoid (low impact, high effort) — không làm. Biến thể khác: <strong>Impact vs Confidence</strong> (mức độ chắc chắn về kết quả); <strong>Strategic value vs Risk</strong>. Lưu ý: ma trận tốt nhất là ma trận phản ánh đúng chiến lược và ràng buộc thực tế, không phải ma trận «chuẩn» theo sách.",
+example:"Team có 20 cải tiến sản phẩm tiềm năng. Sau khi đánh giá Impact (1-5) × Effort (1-5), phát hiện: 4 cải tiến có impact cao (4-5) và effort thấp (1-2) — đây là «quick wins» cần làm ngay trong tháng tới. 3 cải tiến impact cao nhưng effort rất lớn — đưa vào roadmap Q3-Q4. Loại bỏ 8 cải tiến impact thấp khỏi danh sách.",
+takeaway:"Khi có nhiều vấn đề cần giải quyết, <strong>không ưu tiên bằng cảm tính hay ai la to nhất</strong>. Dùng ma trận Impact × Effort và xếp hạng rõ ràng. Quick wins trước — để tạo momentum và chứng minh giá trị."},
+
+// ===== 3. TÌM NGUYÊN NHÂN GỐC RỄ =====
+{cat:"nguyen",vi:"Kỹ thuật 5 Whys",en:"5 Whys",
+short:"Hỏi <strong>«Tại sao?»</strong> liên tiếp 5 lần để đi từ triệu chứng bề mặt đến <strong>nguyên nhân gốc rễ (root cause)</strong>. Được Toyota phát triển, áp dụng trong mọi lĩnh vực.",
+detail:"Taiichi Ohno (Toyota): <strong>«Hãy hỏi tại sao năm lần về bất kỳ vấn đề nào.»</strong> Con số 5 không cứng nhắc — đủ để đào sâu, không nhất thiết đúng 5 lần. Nguyên tắc: mỗi câu trả lời phải dựa trên <strong>bằng chứng thực tế</strong>, không phải suy đoán. Cạm bẫy phổ biến: (1) Dừng quá sớm khi chạm nguyên nhân «tiện lợi» nhưng không phải gốc rễ; (2) Đổ lỗi cho con người thay vì hệ thống — 90% vấn đề có gốc rễ trong system, không phải individual; (3) Một vấn đề có thể có nhiều nhánh «tại sao» — cần theo từng nhánh. <strong>5 Whys hoạt động tốt nhất</strong> khi kết hợp với Fishbone diagram để không bỏ sót nhánh nguyên nhân.",
+example:"Máy sản xuất dừng. Tại sao? → Cầu dao ngắt. Tại sao? → Quá tải dòng điện. Tại sao? → Motor bơm bị kẹt. Tại sao? → Không được bôi trơn. Tại sao? → Không có lịch bảo trì định kỳ. → Root cause: <strong>thiếu hệ thống bảo trì phòng ngừa</strong>. Nếu chỉ thay cầu dao (Why 1) — máy lại dừng. Nếu chỉ sửa motor (Why 3) — motor khác sẽ hỏng. Chỉ lập lịch bảo trì (Why 5) mới ngăn tái phát.",
+takeaway:"Khi gặp vấn đề, <strong>không dừng lại ở nguyên nhân đầu tiên</strong>. Tiếp tục hỏi «Tại sao?» cho đến khi đạt nguyên nhân <strong>bạn có thể kiểm soát và thay đổi</strong> — nguyên nhân thuộc về system, không chỉ individual."},
+
+{cat:"nguyen",vi:"Biểu đồ xương cá (Fishbone)",en:"Fishbone Diagram (Ishikawa)",
+short:"Công cụ trực quan hóa nguyên nhân theo <strong>nhiều chiều</strong>: vấn đề ở đầu cá, nguyên nhân theo các «xương» lớn (6M: Man, Machine, Method, Material, Measurement, Environment) — đảm bảo không bỏ sót nhóm nguyên nhân nào.",
+detail:"Kaoru Ishikawa (Nhật, 1960s) phát triển để phân tích chất lượng sản xuất. Mô hình 6M: (1) <strong>Man (Con người)</strong> — kỹ năng, đào tạo, thái độ; (2) <strong>Machine (Máy móc)</strong> — thiết bị, công cụ, hạ tầng; (3) <strong>Method (Phương pháp)</strong> — quy trình, quy định, tiêu chuẩn; (4) <strong>Material (Nguyên liệu)</strong> — đầu vào, nhà cung cấp; (5) <strong>Measurement (Đo lường)</strong> — dữ liệu, chỉ số; (6) <strong>Environment (Môi trường)</strong> — văn hóa, không gian làm việc. Thực hành: nhóm brainstorm nguyên nhân và đặt vào từng xương — sau đó vote nguyên nhân nào có khả năng là root cause nhất để kiểm chứng.",
+example:"Vấn đề: tỷ lệ lỗi sản phẩm tăng đột biến. Fishbone: Man (nhân viên mới chưa đào tạo đủ?), Machine (máy kiểm tra chất lượng cũ bị lệch chuẩn?), Method (quy trình QC không được follow đúng?), Material (nhà cung cấp mới giao nguyên liệu kém chất lượng?). Sau điều tra: nguyên nhân thực là Material — nhà cung cấp thay đổi mà không thông báo. Nếu chỉ nghĩ đến Man và Method, sẽ đi sai hướng.",
+takeaway:"Dùng Fishbone khi vấn đề có nhiều <strong>nguyên nhân tiềm năng từ các chiều khác nhau</strong>. Vẽ biểu đồ nhóm (15-20 phút) trước khi phân tích 5 Whys — đảm bảo không bỏ sót toàn bộ nhóm nguyên nhân."},
+
+{cat:"nguyen",vi:"Phân tích nguyên nhân gốc rễ (RCA)",en:"Root Cause Analysis",
+short:"Phương pháp luận hệ thống để tìm <strong>nguyên nhân gốc (root cause)</strong> — không phải vá lỗi bề mặt mà xử lý nguyên nhân nền tảng để vấn đề không tái phát. Gồm nhiều công cụ: 5 Whys, Fishbone, FTA, FMEA.",
+detail:"RCA có nguồn gốc từ ngành hàng không và y tế — nơi sai lầm có thể gây chết người, nên phải học và ngăn chặn tái phát thực sự. Nguyên tắc nền tảng: <strong>«Blameless postmortem»</strong> — mục tiêu là tìm lỗi hệ thống, không phán xét cá nhân. Nếu môi trường không an toàn để thừa nhận lỗi, RCA sẽ không hoạt động vì người ta che giấu thông tin. Ba cấp nguyên nhân: (1) <strong>Immediate cause</strong>: điều trực tiếp gây ra vấn đề; (2) <strong>Contributing factors</strong>: điều kiện tạo nên immediate cause; (3) <strong>Root cause</strong>: lỗi hệ thống nền tảng. Giải pháp hiệu quả phải xử lý cả ba.",
+example:"Website sập 3 giờ. Immediate: server overload. Contributing: không có auto-scaling. Root cause: không có quy trình load testing bắt buộc trước khi release tính năng mới. Nếu chỉ thêm server (immediate) — sẽ lặp lại khi tính năng mới ra. Chỉ xây quy trình load testing (root) mới ngăn được lần sau.",
+takeaway:"Sau mỗi sự cố quan trọng, tổ chức <strong>blameless postmortem</strong> với câu hỏi: «Hệ thống/quy trình nào cho phép điều này xảy ra?» — không phải «ai sai?» Ghi lại root cause và action items để thay đổi hệ thống, không chỉ cá nhân."},
+
+{cat:"nguyen",vi:"Phân tích điểm thất bại",en:"Failure Mode Analysis (FMEA)",
+short:"<strong>FMEA (Failure Mode and Effects Analysis)</strong>: chủ động liệt kê tất cả cách một hệ thống/quy trình có thể thất bại, đánh giá hậu quả và xác suất, rồi ưu tiên phòng ngừa những điểm rủi ro cao nhất.",
+detail:"FMEA xuất phát từ NASA và ngành hàng không vũ trụ, nay được dùng rộng rãi. Quy trình: (1) Liệt kê tất cả <strong>failure modes</strong> (cách có thể hỏng); (2) Đánh giá mỗi failure theo 3 chiều: <strong>Severity (S)</strong> — hậu quả nặng đến đâu, <strong>Occurrence (O)</strong> — xác suất xảy ra, <strong>Detection (D)</strong> — khả năng phát hiện trước khi gây hại; (3) Tính <strong>RPN = S × O × D</strong> (Risk Priority Number); (4) Tập trung cải thiện những failure mode có RPN cao nhất. Điểm mạnh: phòng ngừa thay vì phản ứng — tìm vấn đề trước khi nó xảy ra.",
+example:"Thiết kế quy trình onboarding nhân viên mới. FMEA: Failure mode «nhân viên không nhận được laptop ngày đầu» (S=4, O=3, D=2, RPN=24). Failure mode «buddy/mentor không được assign» (S=4, O=4, D=3, RPN=48 — cao hơn). Team ưu tiên xây quy trình assign buddy tự động (RPN 48) trước quy trình provisioning laptop (RPN 24).",
+takeaway:"Trước khi triển khai bất kỳ quy trình/hệ thống mới, <strong>dành 1-2 giờ làm FMEA mini</strong>: «Cách nào có thể hỏng? Hỏng thì hậu quả thế nào? Xác suất bao nhiêu? Có phát hiện được không?» Tập trung phòng ngừa top 3 failure modes có RPN cao nhất."},
+
+{cat:"nguyen",vi:"Phân biệt tương quan và nhân quả",en:"Correlation vs Causation",
+short:"<strong>Tương quan (correlation)</strong>: A và B cùng thay đổi. <strong>Nhân quả (causation)</strong>: A gây ra B. Nhầm lẫn hai loại này là nguyên nhân phổ biến nhất của giải pháp không hiệu quả — can thiệp vào yếu tố tương quan không thay đổi được kết quả.",
+detail:"Lỗi này xảy ra vì tương quan dễ đo và dễ nhận ra hơn nhân quả. Để thiết lập nhân quả, cần: (1) <strong>Temporal precedence</strong>: A phải xảy ra trước B; (2) <strong>Covariation</strong>: A và B biến đổi cùng nhau; (3) <strong>Elimination of alternatives</strong>: không có giải thích nào khác. Biến thứ ba (confounding variable) là bẫy phổ biến nhất: C gây ra cả A và B, tạo ra tương quan giả giữa A và B — thay đổi A không thay đổi B. Thiết kế thực nghiệm phá bẫy: <strong>A/B test (thử nghiệm ngẫu nhiên có kiểm soát)</strong> — randomization loại bỏ confounders.",
+example:"Nghiên cứu thấy: trẻ có nhiều sách ở nhà học tốt hơn. Kết luận sai: tặng sách cho trẻ khó khăn sẽ cải thiện thành tích. Thực tế: cả «có sách» và «học tốt» đều bị gây ra bởi «cha mẹ có học thức và quan tâm đến giáo dục» (biến thứ ba). Chương trình tặng sách không tác động đáng kể vì can thiệp vào tương quan, không phải nhân quả.",
+takeaway:"Khi thấy hai yếu tố cùng thay đổi, <strong>không vội vàng kết luận nhân quả</strong>. Hỏi: «Có biến thứ ba nào ảnh hưởng cả hai không? A có xảy ra trước B không? Nếu thay đổi A mà giữ nguyên mọi thứ khác, B có thay đổi không?»"},
+
+// ===== 4. TƯ DUY SÁNG TẠO =====
+{cat:"sangtao",vi:"Brainstorming có cấu trúc",en:"Structured Brainstorming",
+short:"Tách biệt hoàn toàn <strong>giai đoạn tạo ý tưởng</strong> (không phán xét) và <strong>giai đoạn đánh giá</strong> — não không thể sáng tạo và phê phán đồng thời. Brainstorming có cấu trúc hiệu quả hơn nhiều so với «cứ nghĩ đi».",
+detail:"Quy tắc brainstorming của Osborn: (1) <strong>Defer judgment</strong> — không phán xét trong giai đoạn tạo ý tưởng; (2) <strong>Quantity over quality</strong> — tạo nhiều ý tưởng nhất có thể; (3) <strong>Build on others</strong> — phát triển ý tưởng của người khác; (4) <strong>Welcome wild ideas</strong> — ý tưởng kỳ lạ có thể dẫn đến breakthrough. Nhưng nghiên cứu cho thấy <strong>«brainwriting»</strong> (viết độc lập trước khi chia sẻ) thường tốt hơn brainstorming nói miệng — vì tránh «production blocking» (người đang nói chặn người khác nghĩ) và «social loafing» (ỷ lại người khác). Công cụ mạnh: <strong>SCAMPER</strong> (Substitute, Combine, Adapt, Modify, Put to other uses, Eliminate, Reverse).",
+example:"Team muốn cải thiện quy trình onboarding. Brainwriting 6-3-5: 6 người, mỗi người viết 3 ý tưởng trong 5 phút, sau đó xoay vòng giấy và phát triển ý tưởng của người trước trong 5 phút tiếp theo. Sau 6 vòng: 108 ý tưởng (6×3×6) trong 30 phút — nhiều và đa dạng hơn brainstorming nói thông thường.",
+takeaway:"Thay vì «brainstorm» chung chung, <strong>dùng brainwriting</strong>: mỗi người viết ý tưởng độc lập trước (5-10 phút), sau đó chia sẻ và build on nhau. Tuyệt đối không phán xét trong giai đoạn tạo ý tưởng — để đó cho giai đoạn sau."},
+
+{cat:"sangtao",vi:"Tư duy ngang (SCAMPER)",en:"Lateral Thinking (SCAMPER)",
+short:"<strong>SCAMPER</strong>: Substitute (thay thế), Combine (kết hợp), Adapt (thích nghi), Modify/Magnify (sửa đổi), Put to other uses (dùng cho mục đích khác), Eliminate (loại bỏ), Reverse/Rearrange (đảo ngược) — bộ prompt kích hoạt tư duy sáng tạo có hệ thống.",
+detail:"Edward de Bono phát triển <strong>lateral thinking</strong> (tư duy ngang) như đối trọng với vertical thinking (tư duy dọc, logic từng bước). SCAMPER là công cụ hóa tư duy ngang: thay vì tìm giải pháp bằng cách đào sâu hơn trong cùng một hướng, SCAMPER buộc nhìn vấn đề từ 7 góc độ khác nhau. Đặc biệt hiệu quả khi: (1) Đang cải tiến sản phẩm/quy trình hiện có; (2) Bị «stuck» trong cùng một loại giải pháp; (3) Cần tìm ứng dụng mới cho năng lực hiện có. SCAMPER không tự tạo ra ý tưởng — nó là <strong>trigger (kích hoạt)</strong> để não tìm kiếm ở những góc chưa nghĩ đến.",
+example:"Áp dụng SCAMPER cho «xe đạp». Substitute: thay bánh xe bằng ball wheels → xe đạp omnidirectional. Combine: kết hợp xe đạp + máy tính → smart bike theo dõi sức khỏe. Eliminate: bỏ yên xe → balance bike cho trẻ học đạp. Reverse: đặt người ở phía sau thay vì trước → recumbent bike (ít cản gió). Mỗi câu hỏi SCAMPER tạo ra một hướng sản phẩm mới.",
+takeaway:"Khi brainstorming không tạo ra ý tưởng mới, <strong>chạy qua 7 câu hỏi SCAMPER</strong> cho vấn đề đó. Mỗi chữ cái là một prompt riêng — dành 3-5 phút cho từng cái. Thường chỉ cần 2-3 câu hỏi để phá vỡ deadlock tư duy."},
+
+{cat:"sangtao",vi:"Tư duy từ tương tự",en:"Analogical Thinking",
+short:"Mượn cấu trúc giải pháp từ <strong>lĩnh vực hoàn toàn khác</strong> — nơi vấn đề tương tự đã được giải quyết — và «dịch» giải pháp đó sang bối cảnh của mình. Phần lớn đột phá sáng tạo là kết quả của analogical thinking.",
+detail:"IDEO gọi đây là <strong>«Analogous inspiration»</strong> — một kỹ thuật cốt lõi trong Design Thinking. Cách tìm tương tự: (1) <strong>Direct analogy</strong>: tìm trong thiên nhiên hoặc lĩnh vực khác (thiết kế cánh máy bay từ cánh chim); (2) <strong>Personal analogy</strong>: «Nếu TÔI LÀ vấn đề này, tôi cảm thấy thế nào?»; (3) <strong>Fantasy analogy</strong>: «Trong thế giới lý tưởng, vấn đề này được giải thế nào?» Tại sao hiệu quả: lĩnh vực khác đã đầu tư nhiều thập kỷ giải quyết vấn đề tương tự, có thể «học miễn phí» từ họ.",
+example:"Velcro: George de Mestral quan sát hạt cỏ bám vào lông chó và phóng đại dưới kính hiển vi — tìm thấy móc nhỏ bám vào sợi lông. Tương tự: móc ↔ dây kéo → Velcro. F1 pit stop: bệnh viện học quy trình chuyển bệnh nhân nhanh hơn bằng cách mời chuyên gia F1 quan sát phòng mổ. Toyota Production System: lấy cảm hứng từ hệ thống bổ sung hàng của siêu thị Mỹ.",
+takeaway:"Khi stuck, hỏi: <strong>«Ngành/lĩnh vực nào khác đã giải quyết vấn đề tương tự?»</strong> Tìm 3-5 ví dụ từ lĩnh vực xa, sau đó áp dụng tương tự vào vấn đề của mình. Sự xa lạ của nguồn là lợi thế, không phải bất lợi."},
+
+{cat:"sangtao",vi:"Thiết kế ngược (Reverse Engineering)",en:"Reverse Engineering",
+short:"Bắt đầu từ <strong>kết quả mong muốn</strong> và làm ngược về hiện tại — xác định những bước cần thực hiện để đến được điểm đó. Đặc biệt hiệu quả khi mục tiêu rõ ràng nhưng con đường chưa rõ.",
+detail:"<strong>Backcasting</strong> — từ tương lai ngược về hiện tại — khác với forecasting (từ hiện tại dự báo tương lai). Hiệu quả khi: tương lai mong muốn rất khác hiện trạng; cần thay đổi đột phá, không phải cải tiến dần. Amazon <strong>«Working Backwards»</strong>: viết press release ngày ra mắt sản phẩm TRƯỚC khi bắt đầu phát triển, sau đó làm ngược về «cần làm gì hôm nay». Quy trình backcasting: (1) Hình dung trạng thái thành công rõ ràng; (2) Hỏi «Điều gì phải xảy ra NGAY TRƯỚC đó?»; (3) Tiếp tục lùi đến hiện tại — tạo ra chuỗi milestones.",
+example:"Mục tiêu: công ty đạt 100 tỷ doanh thu năm 5. Backcasting: Năm 5 cần 50 khách lớn → Năm 4 cần pipeline 100 khách đang negotiate → Năm 3 cần 5 case study thuyết phục → Năm 2 cần 3 pilot thành công → Năm 1 cần 1 pilot đầu tiên, tuyển sales team core → Hôm nay: xác định 10 potential pilot customers và tiếp cận.",
+takeaway:"Khi mục tiêu dài hạn trông quá xa, <strong>dùng backcasting</strong>: viết «ngày X trong tương lai, chúng ta đã đạt Y». Sau đó hỏi từng bước ngược về: «Điều gì phải đúng ngay trước đó?» Chuỗi backward steps trở thành roadmap hành động."},
+
+{cat:"sangtao",vi:"Kết hợp ý tưởng không liên quan",en:"Combinatorial Creativity",
+short:"Phần lớn ý tưởng «mới» là <strong>kết hợp</strong> của những thứ đã tồn tại nhưng chưa ai ghép lại. Sáng tạo không phải tạo ra từ hư không mà là nhìn thấy kết nối mới giữa những thứ đã có.",
+detail:"Steve Jobs: <strong>«Creativity is just connecting things.»</strong> Nghiên cứu về lịch sử sáng tạo cho thấy hầu hết đột phá lớn là kết hợp của ý tưởng từ nhiều lĩnh vực: Gutenberg kết hợp máy ép nho + con dấu chữ → máy in. iPhone = điện thoại + máy tính + iPod + camera. Hệ quả thực tế: (1) <strong>Tiếp xúc nhiều lĩnh vực</strong> tăng nguyên liệu để kết hợp; (2) <strong>«Adjacent possible»</strong> (Stuart Kauffman): ý tưởng có thể tồn tại phụ thuộc vào những gì đã tồn tại; (3) Tìm kiếm chủ động kết hợp: «Nếu lấy [A] từ ngành X và [B] từ ngành Y, có thể tạo ra gì?»",
+example:"Airbnb = eBay (marketplace) + Craigslist (phòng trống cho thuê) + cơ chế review của tripadvisor. Uber = GPS smartphones + credit card online + marketplace hai chiều. Không cần phát minh gì mới về mặt kỹ thuật — chỉ kết hợp những thứ đã tồn tại theo cách chưa ai nghĩ đến.",
+takeaway:"Để tạo ý tưởng mới, <strong>liệt kê các thành phần/công cụ đã có</strong> trong lĩnh vực bạn và lĩnh vực liền kề. Hỏi: «Kết hợp nào chưa ai thử?» Đọc rộng, ghi chép thường xuyên, và chủ động tìm kết nối giữa những thứ tưởng như không liên quan."},
+
+// ===== 5. MÔ HÌNH TƯ DUY & MENTAL MODELS =====
+{cat:"mohinh",vi:"Latticework of Mental Models",en:"Latticework of Mental Models",
+short:"Charlie Munger: cần xây dựng <strong>mạng lưới các mô hình tư duy</strong> từ nhiều lĩnh vực khác nhau — vật lý, sinh học, tâm lý, kinh tế — để nhìn vấn đề qua nhiều lăng kính, tránh <strong>«búa đinh» (hammer and nail)</strong>.",
+detail:"Munger: <strong>«To the man with only a hammer, every problem looks like a nail.»</strong> Người chỉ có một công cụ tư duy sẽ cố dùng nó cho mọi tình huống — kể cả khi không phù hợp. Latticework không phải danh sách công cụ mà là cách chúng <strong>kết nối và bổ trợ nhau</strong>: mô hình từ vật lý giải thích động lực xã hội; mô hình từ sinh học giải thích sự thích nghi tổ chức; mô hình từ kinh tế giải thích hành vi cá nhân. Khi nhiều mô hình từ lĩnh vực khác nhau cùng chỉ về một kết luận — <strong>«Lollapalooza effect»</strong> — đó là tín hiệu rất mạnh.",
+example:"Phân tích quyết định giảm giá sản phẩm: Kinh tế học (supply-demand → có thể tăng volume). Tâm lý học (anchoring → giảm giá tạo kỳ vọng giá thấp lâu dài). Lý thuyết trò chơi (đối thủ sẽ làm gì?). Tư duy hệ thống (feedback loop — giảm giá → tăng volume → cần tăng capacity → tăng chi phí → phải giảm giá thêm?). Mỗi mô hình tiết lộ một rủi ro khác nhau mà phân tích đơn chiều bỏ qua.",
+takeaway:"Xây thói quen học <strong>ít nhất 1 khái niệm cốt lõi từ một lĩnh vực mới</strong> mỗi tháng. Khi đối mặt vấn đề, chủ động hỏi: «Mô hình từ lĩnh vực nào khác có thể áp dụng ở đây?» Đặc biệt khi giải pháp hiển nhiên không hoạt động."},
+
+{cat:"mohinh",vi:"Mô hình tư duy thứ hai (Second-order Thinking)",en:"Second-order Thinking",
+short:"Không chỉ hỏi «điều này dẫn đến gì» (bậc 1) mà còn «rồi điều đó dẫn đến gì tiếp theo» (bậc 2, 3). <strong>Hầu hết người chỉ nghĩ đến hậu quả bậc 1</strong> — người giải quyết vấn đề giỏi nghĩ đến bậc 2 và xa hơn.",
+detail:"Howard Marks: <strong>«Everyone can see first-order effects; second-order effects give you an edge.»</strong> Hậu quả bậc 1 thường là những gì người thiết kế giải pháp mong muốn. Hậu quả bậc 2 là những gì xảy ra khi hệ thống phản ứng lại với bậc 1 — thường là ngược ý định. Ví dụ nổi tiếng: <strong>Cobra effect</strong> — chính phủ Anh trả tiền cho mỗi con rắn hổ mang chết để giảm số rắn → người dân nuôi rắn → khi dừng trả tiền, rắn được thả ra → số rắn tăng thêm. Câu hỏi thực hành: «Sau khi điều này xảy ra, ai sẽ phản ứng thế nào? Và sau khi họ phản ứng, điều gì tiếp theo?»",
+example:"Giải pháp giảm kẹt xe: mở rộng đường cao tốc (bậc 1: giảm kẹt xe tức thì). Bậc 2: đường rộng hơn khuyến khích nhiều người mua xe hơn. Bậc 3: sau 3-5 năm, kẹt xe tệ hơn trước vì số xe tăng — «induced demand». Đây là lý do nhiều thành phố chọn giải pháp hệ thống (phí tắc nghẽn + giao thông công cộng) thay vì chỉ mở rộng đường.",
+takeaway:"Với mọi giải pháp quan trọng, <strong>hỏi ít nhất 3 bậc</strong>: «Nếu chúng ta làm X → điều gì xảy ra (bậc 1)? → rồi ai/gì phản ứng (bậc 2)? → hậu quả tiếp theo là gì (bậc 3)?» Đặc biệt tập trung vào: ai được lợi và ai bị thiệt ở mỗi bậc."},
+
+{cat:"mohinh",vi:"Mô hình vòng tròn năng lực",en:"Circle of Competence",
+short:"<strong>Vòng tròn năng lực</strong>: phạm vi mà bạn thực sự hiểu sâu và có thể ra quyết định tốt. Biết <strong>ranh giới</strong> của vòng tròn này — và tôn trọng nó — quan trọng hơn việc vòng tròn lớn đến đâu.",
+detail:"Buffett và Munger: <strong>«It's not the size of the circle that matters, it's knowing where the edge is.»</strong> Hầu hết người không biết ranh giới năng lực của mình — đặc biệt những người thành công trong một lĩnh vực dễ bị <strong>overconfidence</strong> khi áp dụng sang lĩnh vực khác. Trong giải quyết vấn đề: (1) Xác định rõ «vấn đề này thuộc phạm vi năng lực của tôi không?»; (2) Nếu không — tìm người có năng lực thực sự hoặc đầu tư học trước khi quyết định; (3) Không ngụy trang sự thiếu hiểu biết bằng sự tự tin. Kiểm tra: bạn có thể giải thích vấn đề và giải pháp bằng ngôn ngữ đơn giản cho người không chuyên không?",
+example:"Một PM xuất sắc về product được thăng lên vị trí điều hành kinh doanh. Vòng tròn năng lực của ông về product rất lớn; về tài chính doanh nghiệp và M&A thì nhỏ hơn nhiều. Nếu ra quyết định tài chính lớn với tự tin như quyết định product — sẽ mắc sai lầm nghiêm trọng. Nhận biết ranh giới và tìm CFO giỏi để bổ sung là dấu hiệu trưởng thành.",
+takeaway:"Trước mỗi quyết định quan trọng, hỏi thành thật: <strong>«Vấn đề này có trong vòng tròn năng lực thực sự của tôi không?»</strong> Nếu không — thừa nhận và tìm người giỏi hơn trong lĩnh vực đó, thay vì cố giải bằng năng lực từ lĩnh vực quen thuộc."},
+
+{cat:"mohinh",vi:"Mô hình đòn bẩy",en:"Leverage",
+short:"Đòn bẩy trong giải quyết vấn đề: <strong>tìm điểm tác động nhỏ tạo ra thay đổi lớn</strong>. Không phải mọi hành động đều có tác động ngang nhau — tập trung vào điểm đòn bẩy cao nhất thay vì nỗ lực đều.",
+detail:"Archimedes: <strong>«Hãy cho tôi một điểm tựa, tôi sẽ nhấc bổng Trái Đất.»</strong> Trong giải quyết vấn đề, đòn bẩy xuất hiện ở nhiều dạng: (1) <strong>Code/Software</strong> — một lần viết, dùng cho triệu người; (2) <strong>Systems/Processes</strong> — thay đổi quy trình ảnh hưởng mọi transaction; (3) <strong>Network effects</strong> — giải pháp mạnh hơn theo cấp số nhân khi thêm người tham gia; (4) <strong>Keystone habits</strong> — thói quen «nền tảng» dẫn đến thay đổi nhiều thói quen khác. Donella Meadows: <strong>điểm đòn bẩy hệ thống</strong> thường nằm ở thay đổi flow, feedback, rules — không phải thay đổi thông số.",
+example:"Muốn tăng năng suất team. Đòn bẩy thấp: nhắc nhở từng người làm việc chăm hơn. Đòn bẩy trung: đào tạo kỹ năng. Đòn bẩy cao: thay đổi quy trình họp (bỏ 5 cuộc họp không cần thiết/tuần → mỗi người có thêm 10 giờ/tuần). Đòn bẩy cao nhất: thay đổi cơ chế đo lường và thưởng — từ «giờ làm» sang «kết quả thực» → hành vi tự điều chỉnh.",
+takeaway:"Trước khi giải quyết vấn đề, hỏi: <strong>«Điểm nào trong hệ thống, nếu thay đổi, sẽ tạo ra tác động lớn nhất?»</strong> Tìm điểm đòn bẩy trong cơ chế đo lường, quy trình, và cấu trúc hệ thống — thường hiệu quả hơn nỗ lực trực tiếp vào kết quả."},,
+// ===== 6. TƯ DUY HỆ THỐNG =====
+{cat:"hethong",vi:"Tư duy hệ thống",en:"Systems Thinking",
+short:"Nhìn vấn đề như một phần của <strong>hệ thống tương tác (system)</strong> thay vì sự kiện đơn lẻ — hiểu <strong>vòng phản hồi (feedback loops)</strong>, độ trễ và hệ quả không mong muốn trước khi can thiệp.",
+detail:"Jay Forrester và Donella Meadows phát triển systems thinking như ngành học độc lập. Sự khác biệt cốt lõi: tư duy tuyến tính hỏi «cái gì gây ra điều này?» (một nguyên nhân, một hậu quả); tư duy hệ thống hỏi «hệ thống tạo ra hành vi này thế nào?» (nhiều nguyên nhân, vòng nhân quả). Hai loại <strong>vòng phản hồi</strong> cơ bản: (1) <strong>Reinforcing loop (R)</strong> — khuếch đại, tạo tăng trưởng hoặc suy giảm theo cấp số nhân; (2) <strong>Balancing loop (B)</strong> — điều chỉnh về trạng thái cân bằng, chống lại thay đổi. Hầu hết vấn đề dai dẳng là do can thiệp không hiểu đúng cấu trúc vòng phản hồi — <strong>«policy resistance»</strong>: hành động tốt nhưng hệ thống bù trừ lại.",
+example:"Bệnh viện quá tải: tư duy tuyến tính → thêm giường. Tư duy hệ thống → phát hiện: thiếu cơ sở chăm sóc tại nhà → bệnh nhân nhập viện sớm và nằm lâu hơn cần thiết → thêm giường chỉ giải quyết triệu chứng. Giải pháp hệ thống: đầu tư vào chăm sóc tại nhà và phòng ngừa → bệnh nhân nhập viện ít hơn và nằm ngắn hơn.",
+takeaway:"Khi giải pháp hiện tại không hiệu quả dù đã thử nhiều lần, đây là dấu hiệu cần <strong>tư duy hệ thống</strong>. Hỏi: <strong>«Hệ thống tôi đang cố thay đổi có những feedback loops nào mà tôi chưa nhìn thấy?»</strong>"},
+
+{cat:"hethong",vi:"Vòng phản hồi và điểm đòn bẩy hệ thống",en:"Feedback Loops and Leverage Points",
+short:"<strong>Vòng phản hồi (feedback loops)</strong> quyết định hành vi của hệ thống. <strong>Điểm đòn bẩy (leverage points)</strong> là nơi can thiệp nhỏ tạo thay đổi lớn — thường ngược trực giác: không phải ở nơi «hiển nhiên» nhất.",
+detail:"Donella Meadows xếp hạng 12 điểm đòn bẩy trong hệ thống, từ thấp đến cao: (thấp) Thay đổi thông số (số liệu cụ thể) → Thay đổi cấu trúc vật chất → Thay đổi độ trễ → Thay đổi cấu trúc vòng phản hồi → Thay đổi thông tin flow → Thay đổi rules → Thay đổi mục tiêu hệ thống → (cao nhất) Thay đổi paradigm (mô hình tư duy nền tảng). <strong>Nghịch lý</strong>: điểm đòn bẩy cao nhất thường bị can thiệp sai hướng nhất. Ứng dụng: khi nhiều can thiệp thất bại, tìm điểm đòn bẩy cao hơn trong hệ thống — thường là thay đổi rules hoặc flow thông tin.",
+example:"Muốn giảm ô nhiễm: thay đổi mức phạt (thông số — đòn bẩy thấp). Tạo cơ chế trading carbon (rules — đòn bẩy cao hơn). Thay đổi đo lường GDP để tính chi phí môi trường (thông tin flow — đòn bẩy cao). Thay đổi nhận thức xã hội về thiên nhiên từ tài nguyên khai thác sang hệ sinh thái cần bảo tồn (paradigm — đòn bẩy cao nhất).",
+takeaway:"Khi giải pháp hiện tại không tạo đủ thay đổi, hỏi: <strong>«Tôi đang can thiệp ở điểm đòn bẩy nào? Có điểm đòn bẩy cao hơn trong hệ thống không?»</strong> Thường câu trả lời nằm ở thay đổi rules và flow thông tin, không phải thay đổi thông số."},
+
+{cat:"hethong",vi:"Hậu quả không mong muốn",en:"Unintended Consequences",
+short:"Mọi can thiệp vào hệ thống phức tạp đều tạo ra <strong>hậu quả ngoài ý muốn (unintended consequences)</strong> — đây không phải ngoại lệ mà là quy luật. Người giải quyết vấn đề giỏi tích cực tìm kiếm và lên kế hoạch cho chúng.",
+detail:"Robert Merton (1936) phân tích 5 nguyên nhân gây unintended consequences: (1) <strong>Thiếu hiểu biết về hệ thống</strong>; (2) <strong>Lỗi phân tích</strong>; (3) <strong>Lợi ích ngắn hạn ghi đè dài hạn</strong>; (4) <strong>Giá trị cơ bản xung đột</strong>; (5) <strong>Lời tiên tri tự thực hiện</strong>. Ví dụ nổi tiếng: <strong>Cobra effect</strong> — chính phủ trả tiền cho rắn chết → người dân nuôi rắn → rắn thả ra → số rắn tăng. Biện pháp: (1) <strong>Vẽ causal loop diagram</strong> trước khi triển khai; (2) <strong>Second-order thinking</strong> — ai/gì sẽ phản ứng với giải pháp này?; (3) <strong>Pilot nhỏ</strong> trước khi scale lên.",
+example:"Luật yêu cầu công bố lương theo giới tính để giảm bất bình đẳng (unintended: các công ty cạnh tranh tăng lương cho nhóm thấp hơn, đôi khi bằng cách giảm lương nhóm cao hơn, dẫn đến mặt bằng lương tổng thể thấp xuống). Bắt buộc đội mũ bảo hiểm xe máy (unintended: giảm tỷ lệ tử vong tai nạn xe máy, nhưng ít người hiến nội tạng hơn vì não ít bị tổn thương nghiêm trọng).",
+takeaway:"Trước khi triển khai giải pháp, <strong>tổ chức pre-mortem</strong>: «Nếu giải pháp này gây ra vấn đề mới, vấn đề đó sẽ là gì?» Chủ động hỏi: <strong>«Ai/gì trong hệ thống có thể phản ứng ngược lại? Điều gì có thể xảy ra mà chúng ta không muốn?»</strong>"},
+
+{cat:"hethong",vi:"Độ trễ và kiên nhẫn hệ thống",en:"System Delays",
+short:"<strong>Độ trễ (delays)</strong> giữa hành động và hậu quả trong hệ thống phức tạp gây ra nhiều quyết định sai — người ta can thiệp quá nhiều vì chưa thấy kết quả, hoặc dừng quá sớm vì chưa đủ thời gian hệ thống phản ứng.",
+detail:"Donella Meadows: delays gây ra <strong>oscillation (dao động)</strong> trong hệ thống — như vòi nước nóng có độ trễ, bạn liên tục điều chỉnh nhiệt độ qua lại vì phản hồi chậm. Trong tổ chức: thuê nhân sự (3-6 tháng) → đào tạo hiệu quả (6-12 tháng) → tác động kinh doanh (12-24 tháng). Can thiệp khi chưa thấy kết quả → overshoot. Ba loại delay quan trọng: (1) <strong>Information delay</strong> — mất bao lâu để nhận thấy vấn đề; (2) <strong>Decision delay</strong> — mất bao lâu để quyết định; (3) <strong>Action delay</strong> — mất bao lâu để hành động có hiệu lực. Biện pháp: xác định và tính toán delays trước khi can thiệp.",
+example:"Chính sách tăng lãi suất để kiềm chế lạm phát: tác động thực sự đến nền kinh tế mất 12-18 tháng. Nếu tiếp tục tăng lãi suất khi chưa thấy kết quả (vì chưa hiểu delay) → tăng quá mức → gây suy thoái không cần thiết. FED từng mắc lỗi này nhiều lần trong lịch sử.",
+takeaway:"Với mỗi can thiệp, <strong>xác định delay trước khi đánh giá hiệu quả</strong>. Đặt lịch review phù hợp với thời gian hệ thống phản ứng, không phải theo lịch báo cáo nội bộ. <strong>Đừng can thiệp thêm khi chưa đủ thời gian để thấy kết quả của can thiệp trước.</strong>"},
+
+{cat:"hethong",vi:"Tư duy phi tuyến tính",en:"Non-linear Thinking",
+short:"Phần lớn trực giác con người là <strong>tuyến tính</strong> — nhưng thực tế nhiều hệ thống là <strong>phi tuyến</strong>: gấp đôi đầu vào không cho gấp đôi đầu ra. Tipping points, diminishing returns, và network effects là những biểu hiện của tư duy phi tuyến.",
+detail:"Tư duy tuyến tính nguy hiểm trong: (1) <strong>Tipping points</strong> — hệ thống tích lũy thay đổi âm thầm đến một ngưỡng, sau đó thay đổi đột ngột và không thể đảo ngược; (2) <strong>Diminishing returns</strong> — đầu tư thêm vào điểm bão hòa mang lại ít giá trị hơn; (3) <strong>Network effects</strong> — giá trị tăng theo bình phương số người dùng (Metcalfe's Law); (4) <strong>Power law distributions</strong> — phần lớn kết quả đến từ thiểu số sự kiện (liên quan Pareto). <strong>Brooks's Law</strong>: thêm nhân sự vào dự án đang trễ sẽ làm trễ hơn — phi tuyến đảo ngược trực giác.",
+example:"Mạng xã hội: từ 0 đến 1 triệu user tăng ít giá trị; từ 100 triệu đến 200 triệu tăng giá trị nhiều hơn rất nhiều do network effects. Thêm 1 nhân viên vào team 3 người (tăng 33%) → productivity tăng 30%. Thêm 1 nhân viên vào team 50 người (tăng 2%) → overhead tăng và productivity có thể giảm do coordination cost.",
+takeaway:"Trước khi scale up bất cứ điều gì, hỏi: <strong>«Mối quan hệ đầu vào – đầu ra là tuyến tính hay phi tuyến? Có tipping point, diminishing returns, hay network effects nào không?»</strong> Đừng giả định «2 lần nguồn lực = 2 lần kết quả»."},
+
+{cat:"hethong",vi:"Stock và Flow",en:"Stocks and Flows",
+short:"<strong>Stock</strong> là lượng tích lũy tại một thời điểm (nước trong bể, tiền trong ngân hàng, kiến thức). <strong>Flow</strong> là tốc độ thay đổi (nước chảy vào/ra, thu nhập/chi tiêu, học/quên). Hiểu stock và flow là nền tảng phân tích hệ thống.",
+detail:"Donella Meadows: stock là «bộ nhớ của hệ thống», flow là «hành động và hoạt động». Quan trọng nhất: <strong>stock thay đổi chậm</strong> — không thể tức thì lấp đầy hay làm trống. Điều này giải thích: (1) Tại sao kỹ năng/văn hóa thay đổi chậm dù đầu tư nhiều (stock lớn, flow nhỏ); (2) Tại sao kinh tế không phục hồi ngay dù chính sách tốt (delay từ flow đến stock); (3) Tại sao ô nhiễm tích lũy nhiều năm dù đã giảm lượng xả thải (stock cao, flow giảm chậm hơn). <strong>Ứng dụng</strong>: để giải vấn đề nhanh hơn, tập trung vào flow rate thay vì stock hiện tại.",
+example:"Vốn nhân lực của công ty là stock. Tuyển dụng và đào tạo là inflow. Nghỉ việc và kỹ năng lỗi thời là outflow. Nếu tỷ lệ turnover 30%/năm: trong 3 năm hầu hết team mới hoàn toàn. Để xây team xuất sắc: giảm outflow (giữ người giỏi) hiệu quả hơn tăng inflow (tuyển liên tục) vì giữ người rẻ hơn tuyển và đào tạo người mới.",
+takeaway:"Khi phân tích vấn đề, <strong>xác định stock và flow liên quan</strong>. Hỏi: «Stock này đang ở mức nào? Inflow và outflow là gì? Cần bao lâu để thay đổi stock đáng kể?» Thường tập trung vào outflow (giữ lại) hiệu quả hơn tăng inflow (thêm mới)."},
+
+{cat:"hethong",vi:"Tư duy mô phỏng và kịch bản",en:"Simulation and Scenario Thinking",
+short:"Thay vì dự đoán một tương lai duy nhất, xây dựng <strong>nhiều kịch bản (scenarios)</strong> tốt nhất / xấu nhất / thực tế nhất — chuẩn bị cho bất định thay vì cố dự đoán chính xác điều không thể dự đoán.",
+detail:"Shell Oil dùng scenario planning từ những năm 1970 và đây là lý do họ vượt qua cú sốc dầu mỏ 1973 tốt hơn đối thủ — đã chuẩn bị sẵn kịch bản đó. Nguyên tắc: (1) <strong>Không dự đoán — chuẩn bị</strong>: mục tiêu không phải đoán đúng kịch bản nào xảy ra, mà không bị bất ngờ hoàn toàn; (2) <strong>«Robust decisions»</strong>: tìm quyết định hoạt động tốt trong nhiều kịch bản; (3) Kịch bản phải thực sự khác nhau, không chỉ là «optimistic/pessimistic» của cùng một câu chuyện. <strong>Monte Carlo simulation</strong>: chạy hàng nghìn kịch bản với thông số ngẫu nhiên để hiểu phân phối kết quả có thể.",
+example:"Startup chuẩn bị 3 kịch bản 18 tháng tới: (A) Thị trường tăng như kỳ vọng — cần thêm vốn và tuyển dụng nhanh; (B) Tăng trưởng chậm — tập trung retention, cắt chi phí không cốt lõi; (C) Suy thoái sâu — pivot sang phân khúc ít nhạy cảm kinh tế. «Robust decision»: duy trì runway ít nhất 12 tháng trong kịch bản B — đây là quyết định không phụ thuộc vào việc kịch bản nào xảy ra.",
+takeaway:"Trước quyết định quan trọng với nhiều bất định, <strong>xây dựng ít nhất 3 kịch bản thực sự khác nhau</strong>. Hỏi: «Quyết định nào hoạt động tốt trong cả 3 kịch bản?» — đó là quyết định robust nhất."},
+
+{cat:"hethong",vi:"Mô hình bản đồ và vùng đất",en:"Map vs Territory",
+short:"<strong>«The map is not the territory»</strong> (Korzybski): mọi mô hình, dữ liệu hay kế hoạch chỉ là bản đồ đơn giản hóa của thực tế — quyết định tệ thường đến từ nhầm lẫn bản đồ với thực tế.",
+detail:"Alfred Korzybski (1931): bất kỳ biểu đồ nào về thực tế cũng là bản đồ đơn giản hóa — không phải thực tế. Bản đồ tinh thần của chúng ta: không đầy đủ (bỏ sót chi tiết), có độ trễ (được xây từ kinh nghiệm quá khứ), và có thiên kiến (phản ánh góc nhìn cá nhân). Trong giải quyết vấn đề: (1) <strong>Dữ liệu là bản đồ</strong> — không phản ánh toàn bộ thực tế; (2) <strong>Quy trình là bản đồ</strong> — thực tế thực thi có thể rất khác; (3) <strong>Mô hình kinh doanh là bản đồ</strong> — thị trường thực tế sẽ phản hồi theo cách khác. Biện pháp: <strong>«Gemba»</strong> (Toyota) — đến nơi thực tế xảy ra để quan sát trực tiếp, không chỉ đọc báo cáo.",
+example:"NASA Challenger 1986: các kỹ sư có báo cáo (bản đồ) về độ rủi ro của O-ring ở nhiệt độ thấp. Nhưng bản đồ đó được tạo ra trong phòng lạnh, không phải trên bệ phóng. Quyết định phóng không dựa trên thực tế vật lý — mà trên bản đồ không phản ánh đúng thực tế. 7 phi hành gia thiệt mạng.",
+takeaway:"Khi ra quyết định dựa trên báo cáo và dữ liệu, thường xuyên hỏi: <strong>«Bản đồ này có thể đang bỏ sót điều gì quan trọng?»</strong> Dành thời gian tiếp xúc với thực tế trực tiếp — khách hàng, nhân viên tuyến đầu, quy trình thực tế — không chỉ qua dashboard."},
+
+{cat:"hethong",vi:"Giải pháp tường minh và ẩn",en:"Technical vs Adaptive Problems",
+short:"<strong>Technical problems (vấn đề kỹ thuật)</strong>: có giải pháp rõ ràng, cần chuyên môn. <strong>Adaptive problems (vấn đề thích nghi)</strong>: không có giải pháp rõ ràng, đòi hỏi thay đổi giá trị/hành vi/quan điểm. Hầu hết vấn đề khó thực ra là adaptive.",
+detail:"Ronald Heifetz (Harvard): phân biệt hai loại vấn đề thường bị nhầm lẫn. Áp dụng giải pháp kỹ thuật cho vấn đề thích nghi là sai lầm phổ biến nhất trong lãnh đạo và quản lý. Technical problems: máy hỏng, bug phần mềm, quy trình kém hiệu quả — chuyên gia có thể giải. Adaptive problems: thay đổi văn hóa tổ chức, xây dựng niềm tin với khách hàng, giải quyết xung đột giá trị — không có «chuyên gia» có thể giải thay. Đặc điểm adaptive: (1) Không đồng thuận về vấn đề là gì; (2) Giải pháp đòi hỏi người trong cuộc thay đổi; (3) Tốn thời gian dài hơn kỳ vọng.",
+example:"Công ty muốn «digital transformation»: nhiều tổ chức thuê tư vấn (giải pháp kỹ thuật) để xây hệ thống mới. Nhưng thất bại vì thực ra đây là adaptive problem — đòi hỏi nhân viên thay đổi cách làm việc, lãnh đạo từ bỏ quyền kiểm soát, văn hóa chấp nhận thất bại nhanh. Không ai «giải được» điều đó thay cho tổ chức.",
+takeaway:"Trước khi tìm «chuyên gia giải quyết vấn đề», hỏi: <strong>«Đây là technical hay adaptive problem?»</strong> Nếu adaptive — giải pháp đòi hỏi người trong cuộc thay đổi, không ai từ ngoài giải được. Thay vì tìm expert, cần tạo điều kiện để tổ chức tự học và thích nghi."},
+
+{cat:"hethong",vi:"Chuẩn đoán hệ thống trước khi can thiệp",en:"System Diagnosis Before Intervention",
+short:"<strong>Can thiệp trước khi chuẩn đoán</strong> là lỗi phổ biến nhất trong giải quyết vấn đề phức tạp — như bác sĩ kê thuốc trước khi biết bệnh. Hiểu cơ chế tạo ra vấn đề quan trọng hơn tốc độ ra giải pháp.",
+detail:"Trong y học: chuẩn đoán sai → điều trị sai → bệnh nặng hơn. Tương tự với vấn đề tổ chức: can thiệp vào nguyên nhân sai → không có kết quả + tạo vấn đề mới. Checklist chuẩn đoán hệ thống: (1) <strong>Vấn đề đã tồn tại bao lâu và thay đổi thế nào?</strong> — pattern theo thời gian; (2) <strong>Ai bị ảnh hưởng và theo cách nào?</strong> — phạm vi và tác động; (3) <strong>Điều gì thay đổi trước khi vấn đề xuất hiện?</strong> — tìm trigger; (4) <strong>Đã thử giải pháp nào chưa?</strong> — tránh lặp lại; (5) <strong>Điều gì sẽ xảy ra nếu không làm gì?</strong> — urgency và trajectory.",
+example:"Sales giảm đột ngột. Vội vàng: giảm giá ngay (can thiệp trước chuẩn đoán). Chuẩn đoán kỹ: sales giảm bắt đầu 3 tháng trước → trùng với thời điểm đổi CRM → team sales mất 30% thời gian vào data entry không cần thiết → họ gặp ít khách hơn. Giải pháp đúng: fix CRM, không giảm giá.",
+takeaway:"Trước khi đề xuất giải pháp bất kỳ vấn đề phức tạp, dành <strong>ít nhất bằng thời gian chuẩn đoán như thời gian thiết kế giải pháp</strong>. Hỏi 5 câu hỏi chuẩn đoán — sau đó mới brainstorm."},
+
+// ===== 7. THỬ NGHIỆM & KIỂM CHỨNG =====
+{cat:"thunghiem",vi:"Giả thuyết và kiểm chứng",en:"Hypothesis Testing",
+short:"Phát biểu rõ một <strong>giả thuyết (hypothesis) có thể bác bỏ</strong> — «nếu chúng ta làm X, kết quả Y sẽ xảy ra» — trước khi thử nghiệm. Sau đó thiết kế thử nghiệm để có thể <strong>bác bỏ</strong>, không chỉ xác nhận.",
+detail:"Karl Popper: khoa học tiến bộ không phải bằng cách xác nhận giả thuyết mà bằng cách <strong>bác bỏ (falsification)</strong>. Giả thuyết tốt phải: (1) Cụ thể và đo được; (2) Có thể sai — có kết quả nào đó sẽ bác bỏ nó; (3) Liên quan đến quyết định sẽ thay đổi nếu giả thuyết sai. Lỗi phổ biến: thiết kế thử nghiệm để <strong>xác nhận</strong> giả thuyết — confirmation bias làm chúng ta vô tình tạo ra bằng chứng ủng hộ những gì đã tin. Chống lại: viết trước «kết quả nào sẽ thay đổi ý kiến của tôi?»",
+example:"Startup tin rằng «khách hàng sẽ trả 500k/tháng cho tính năng X». Giả thuyết rõ: «70% người dùng hiện tại sẽ nâng cấp lên gói có X khi ra mắt». Thử nghiệm: landing page mô tả X với nút «Upgrade» → đo tỷ lệ click và thanh toán thực sự. Nếu dưới 30% → giả thuyết sai, cần điều chỉnh pricing hoặc tính năng. Không build tính năng trước khi test giả thuyết về willingness to pay.",
+takeaway:"Trước mọi thử nghiệm, <strong>viết rõ: «Tôi sẽ thay đổi ý kiến/hành động khi kết quả là [X]»</strong>. Nếu không thể điền vào chỗ trống đó — thử nghiệm không có giá trị học hỏi."},
+
+{cat:"thunghiem",vi:"Thử nghiệm tối thiểu (MVP)",en:"Minimum Viable Experiment",
+short:"Thiết kế thử nghiệm <strong>nhỏ nhất có thể học được điều quan trọng nhất</strong> — không phải «thử nghiệm hoàn hảo» mà là «thử nghiệm đủ để ra quyết định tiếp theo». Giảm chi phí học hỏi tối đa.",
+detail:"Lean Startup (Eric Ries) và Design Thinking đều nhấn mạnh: phần lớn thứ học được từ sản phẩm thực tế không thể học trong phòng họp. <strong>Minimum Viable Experiment (MVE)</strong>: thử nghiệm tối thiểu để kiểm chứng giả định quan trọng nhất. Khác với MVP (Minimum Viable Product): MVE tập trung vào học hỏi, không nhất thiết là sản phẩm. Ví dụ MVE: landing page giả (không có sản phẩm thực) để đo demand; mockup giấy để test UX; bán thủ công trước khi tự động hóa. Nguyên tắc: <strong>build-measure-learn</strong> nhanh nhất có thể với chi phí thấp nhất.",
+example:"Dropbox trước khi build sản phẩm: tạo video 3 phút demo cách product sẽ hoạt động → 75.000 đăng ký overnight. Giả thuyết «người ta muốn dùng sản phẩm này» đã được kiểm chứng với chi phí vài nghìn USD, không phải vài triệu. Chỉ sau đó mới build sản phẩm thực.",
+takeaway:"Với mỗi giả định quan trọng, hỏi: <strong>«Cách nhanh nhất và rẻ nhất để kiểm chứng điều này là gì?»</strong> Thường câu trả lời không cần build sản phẩm — landing page, cuộc phỏng vấn, hoặc bán thủ công đã đủ để học điều cần học."},
+
+{cat:"thunghiem",vi:"A/B Testing và thử nghiệm có kiểm soát",en:"A/B Testing",
+short:"<strong>A/B testing</strong>: so sánh hai (hoặc nhiều) phiên bản bằng cách phân chia ngẫu nhiên — loại bỏ ảnh hưởng của các yếu tố bên ngoài và cho phép kết luận nhân quả với độ tin cậy cao.",
+detail:"A/B test là hình thức đơn giản nhất của <strong>Randomized Controlled Trial (RCT)</strong> — tiêu chuẩn vàng trong kiểm chứng nhân quả. Ưu điểm so với «thử trước, đo sau»: randomization loại bỏ <strong>confounding variables</strong> (biến gây nhiễu) — nhóm A và B có cùng điều kiện bên ngoài, chỉ khác ở biến đang test. Yếu tố cần có: (1) <strong>Phân chia ngẫu nhiên thực sự</strong> — không cho phép người dùng tự chọn nhóm; (2) <strong>Sample size đủ lớn</strong> để đạt statistical significance; (3) <strong>Một biến tại một thời điểm</strong> — đổi nhiều thứ cùng lúc không biết cái gì gây ra thay đổi; (4) <strong>Chạy đủ thời gian</strong> để tránh novelty effect.",
+example:"Amazon thực hiện 10.000+ A/B tests mỗi năm. Một test nhỏ: thay đổi màu nút «Add to Cart» từ xanh dương sang cam — tăng 3% conversions → hàng triệu USD doanh thu thêm. Không có A/B test, không ai biết màu nào tốt hơn — «cảm giác» không đáng tin khi có thể đo chính xác.",
+takeaway:"Khi cần so sánh hai phương án, <strong>thiết kế A/B test thay vì dựa vào ý kiến chuyên gia</strong>. Đặc biệt hiệu quả với: UX, messaging, pricing, và quy trình. Nhớ: phân chia ngẫu nhiên, một biến, sample đủ lớn."},
+
+{cat:"thunghiem",vi:"Vòng lặp học hỏi nhanh",en:"Fast Learning Loops",
+short:"<strong>Rút ngắn chu kỳ học hỏi</strong> — từ hành động đến phản hồi đến điều chỉnh — là yếu tố cạnh tranh quan trọng nhất trong môi trường bất định cao. Học nhanh hơn đối thủ quan trọng hơn làm đúng ngay lần đầu.",
+detail:"Jeff Bezos: <strong>«Tốc độ quan trọng. Hầu hết quyết định nên được ra với 70% thông tin bạn muốn — nếu chờ đến 90%, đã quá chậm.»</strong> Vì sao fast feedback loops quan trọng: (1) <strong>Thị trường thay đổi nhanh hơn khả năng dự đoán</strong> — không ai biết đúng từ đầu; (2) <strong>Cost of learning decreases with speed</strong> — phát hiện sai sớm rẻ hơn phát hiện muộn; (3) <strong>Compound learning</strong> — nhiều vòng lặp hơn trong cùng thời gian tích lũy nhiều học hỏi hơn. Công cụ rút ngắn loop: daily standups, weekly reviews, sprint retrospectives, customer interviews thường xuyên.",
+example:"Toyota vs GM những năm 1980: Toyota có vòng lặp cải tiến Kaizen hàng ngày — mỗi công nhân có thể dừng dây chuyền và đề xuất cải tiến, được test ngay hôm đó. GM ra quyết định cải tiến theo năm. Trong 10 năm, Toyota thực hiện hàng triệu cải tiến nhỏ; GM thực hiện vài nghìn thay đổi lớn. Kết quả: Toyota vượt trội về chất lượng và hiệu quả.",
+takeaway:"Đánh giá vòng lặp học hỏi hiện tại: <strong>«Mất bao lâu để tôi biết một quyết định/hành động có hiệu quả không?»</strong> Tìm cách rút ngắn từng bước: đo sớm hơn, quyết định nhanh hơn, deploy thường xuyên hơn. Mỗi lần rút ngắn 50% → gấp đôi tốc độ học."},
+
+{cat:"thunghiem",vi:"Fail fast và học từ thất bại",en:"Fail Fast, Learn Fast",
+short:"<strong>Fail fast</strong> không có nghĩa là thích thất bại — mà là thiết kế để <strong>phát hiện sai lầm sớm và rẻ</strong> thay vì muộn và đắt. Thất bại nhỏ sớm ngăn chặn thất bại lớn muộn.",
+detail:"Silicon Valley: <strong>«Fail fast, fail cheap, fail forward»</strong> — nhưng hay bị hiểu sai. Mục tiêu không phải là thất bại — mà là <strong>học nhanh nhất có thể</strong>. Thất bại có giá trị khi: (1) Thất bại sớm khi chi phí sửa chữa còn thấp; (2) Có cơ chế học hỏi từ thất bại — blameless postmortem; (3) Không lặp lại cùng thất bại. Thất bại không có giá trị: thất bại do cẩu thả (không phải thử nghiệm có chủ đích); thất bại mà không học; thất bại cùng vấn đề nhiều lần. <strong>Phân biệt</strong>: Type 1 errors (innovative risks đáng chấp nhận) và Type 2 errors (preventable mistakes không đáng xảy ra).",
+example:"SpaceX: trong những năm đầu, nhiều vụ phóng thất bại công khai. Mỗi lần: làm postmortem, xác định nguyên nhân chính xác, sửa chữa, và thử lại. Chi phí mỗi lần thất bại giảm dần vì học được nhiều hơn. Đối thủ truyền thống cố tránh thất bại công khai → ít học hỏi hơn, cuối cùng thất bại lớn hơn.",
+takeaway:"Xây dựng văn hóa <strong>«safe to fail small»</strong>: khi ai đó thử nghiệm và thất bại vì lý do có chủ đích và đã học từ đó — khen ngợi, không phạt. Khi thất bại do cẩu thả hoặc không học từ sai lầm cũ — đó mới là vấn đề cần xử lý."},
+
+// ===== 8. THU THẬP & ĐÁNH GIÁ THÔNG TIN =====
+{cat:"thongtin",vi:"Tư duy Bayes trong giải quyết vấn đề",en:"Bayesian Thinking",
+short:"Cập nhật niềm tin một cách hợp lý khi có bằng chứng mới — <strong>tư duy Bayes</strong> tránh hai cực đoan: cứng nhắc không cập nhật và thay đổi hoàn toàn theo thông tin mới nhất.",
+detail:"Định lý Bayes: P(A|B) = P(B|A) × P(A) / P(B). Nhưng quan trọng hơn công thức là <strong>tinh thần Bayes</strong>: bắt đầu với <strong>prior belief</strong> (niềm tin ban đầu dựa trên tất cả thông tin đã có), cập nhật theo sức mạnh của bằng chứng mới để có <strong>posterior belief</strong>, và posterior này trở thành prior cho lần tiếp theo. Trong giải quyết vấn đề: (1) Đừng bỏ qua base rate khi đánh giá giả thuyết mới; (2) Mỗi bằng chứng mới nên thay đổi niềm tin một lượng tỷ lệ với độ mạnh của bằng chứng — không phải thay đổi hoàn toàn hay không thay đổi gì; (3) Diễn đạt độ chắc chắn bằng xác suất, không phải nhị phân đúng/sai.",
+example:"Chẩn đoán sự cố IT: log cho thấy 3 services lỗi cùng lúc. Prior: 60% khả năng là database issue (vì pattern thường gặp). Bằng chứng mới: error message chứa «connection timeout» → cập nhật lên 85%. Bằng chứng tiếp: network latency bình thường → cập nhật xuống 70%. Chuỗi cập nhật Bayes dẫn đến hypothesis rõ hơn mà không bỏ qua hoàn toàn prior knowledge.",
+takeaway:"Khi gặp bằng chứng mới, <strong>đừng thay đổi kết luận hoàn toàn hay không thay đổi gì</strong>. Hỏi: «Bằng chứng này mạnh đến đâu? Nó nên làm thay đổi niềm tin tôi bao nhiêu điểm phần trăm?» Diễn đạt niềm tin bằng xác suất, không nhị phân."},
+
+{cat:"thongtin",vi:"Phân biệt tín hiệu và nhiễu",en:"Signal vs Noise",
+short:"<strong>Tín hiệu (signal)</strong>: thông tin thực sự liên quan đến vấn đề. <strong>Nhiễu (noise)</strong>: biến động ngẫu nhiên không có ý nghĩa. Người giải quyết vấn đề giỏi biết lọc signal từ noise và không phản ứng với noise.",
+detail:"Nate Silver: <strong>«The Signal and the Noise»</strong> — hầu hết dự đoán thất bại vì không phân biệt hai loại. Trong giải quyết vấn đề: (1) <strong>Đo lường quá thường xuyên</strong> tạo ra nhiều noise hơn signal — kiểm tra giá cổ phiếu mỗi giờ thay vì mỗi tháng; (2) <strong>Mô hình phức tạp</strong> thường fit noise hơn là học signal — «overfitting»; (3) <strong>Outlier</strong>: có thể là signal (phát hiện quan trọng) hoặc noise (sai sót đo lường) — cần kiểm chứng thêm. Nhận biết noise: biến động ngẫu nhiên, không có pattern nhất quán, không dự đoán được tương lai. Nhận biết signal: có pattern, consistent, predictive.",
+example:"Metrics của website: traffic ngày Thứ Hai thường thấp hơn 20% — đây là noise theo mùa vụ trong tuần, không phải vấn đề cần giải quyết. Nhưng traffic giảm dần đều trong 3 tháng liên tiếp — đây là signal cần điều tra. Team mới thiếu kinh nghiệm xử lý noise như signal: họp khủng hoảng mỗi Thứ Hai, waste nguồn lực vào việc giải thích biến động bình thường.",
+takeaway:"Trước khi phản ứng với dữ liệu, hỏi: <strong>«Đây là signal thật hay noise ngẫu nhiên?»</strong> Xác định baseline và normal variation trước khi gọi là «vấn đề». Đừng tốn nguồn lực giải thích và giải quyết những gì chỉ là biến động ngẫu nhiên."},
+
+{cat:"thongtin",vi:"Tránh thiên kiến xác nhận khi thu thập dữ liệu",en:"Avoiding Confirmation Bias in Research",
+short:"<strong>Thiên kiến xác nhận (confirmation bias)</strong> trong nghiên cứu: tìm kiếm, diễn giải và nhớ thông tin theo cách xác nhận những gì đã tin — dẫn đến «nghiên cứu» chỉ là hợp lý hóa kết luận có sẵn.",
+detail:"Confirmation bias là thiên kiến nhận thức mạnh nhất và phổ biến nhất. Trong giải quyết vấn đề: (1) <strong>Thu thập dữ liệu</strong>: chỉ tìm bằng chứng ủng hộ giả thuyết đã có → bỏ qua bằng chứng phản bác; (2) <strong>Phỏng vấn khách hàng</strong>: đặt câu hỏi leading — «Bạn thấy tính năng X hữu ích không?» thay vì «Bạn thường làm gì khi gặp tình huống Y?»; (3) <strong>Phân tích dữ liệu</strong>: cherry-pick data points ủng hộ kết luận muốn có. Biện pháp: (1) Xác định trước <strong>«điều gì sẽ bác bỏ giả thuyết của tôi?»</strong> và tích cực tìm kiếm; (2) Mời người phản biện tham gia nghiên cứu; (3) Dùng <strong>pre-registration</strong> — công bố giả thuyết trước khi thu thập dữ liệu.",
+example:"Nhóm product chắc chắn feature mới sẽ được yêu thích. Họ phỏng vấn 10 khách hàng: với 7 người phản hồi tích cực → «xác nhận». Nhưng họ đã chọn phỏng vấn những khách hàng power users và bạn bè (survivorship bias + selection bias). 80% khách hàng thực tế không bao giờ dùng feature đó sau launch.",
+takeaway:"Khi thu thập dữ liệu về vấn đề, <strong>luôn tìm kiếm bằng chứng bác bỏ</strong> với cùng nỗ lực như tìm bằng chứng ủng hộ. Hỏi: «Điều gì sẽ thuyết phục tôi rằng tôi đang sai?» Nếu không trả lời được — đang trong bẫy confirmation bias."},
+
+{cat:"thongtin",vi:"Phỏng vấn người dùng và nghiên cứu định tính",en:"User Research and Qualitative Methods",
+short:"<strong>Nghiên cứu định tính (qualitative research)</strong> — phỏng vấn sâu, quan sát — tìm hiểu <strong>«tại sao»</strong> và <strong>«như thế nào»</strong> mà dữ liệu định lượng không thể nói. Hiểu ngữ cảnh và động lực thực sự của vấn đề.",
+detail:"Henry Ford: <strong>«Nếu hỏi mọi người họ muốn gì, họ sẽ nói muốn ngựa nhanh hơn.»</strong> Nhiệm vụ của nghiên cứu định tính không phải hỏi về giải pháp mà về <strong>hành vi và ngữ cảnh thực tế</strong>. Kỹ thuật quan trọng: (1) <strong>Contextual inquiry</strong>: quan sát người dùng trong môi trường thực; (2) <strong>Jobs to be Done (JTBD)</strong>: tìm hiểu «việc thực sự» mà người ta cần làm — Milkshake example (Clayton Christensen); (3) <strong>5 whys trong phỏng vấn</strong>: liên tục hỏi sâu hơn về hành vi; (4) <strong>Avoid leading questions</strong>: câu hỏi mở, không leading. Tỷ lệ lắng nghe vs nói: 80/20 cho người phỏng vấn.",
+example:"McDonald's nghiên cứu milkshake: camera quay 18 giờ/ngày ai mua milkshake và khi nào. Phát hiện: 40% milkshake buổi sáng được mua bởi người đi làm một mình, mang theo trong xe. Thực ra họ mua milkshake không phải vì thèm mà vì nó «giúp qua buổi sáng dài» — đặc vào cốc, khó làm bẩn xe, uống được 20 phút. Insight này thay đổi hoàn toàn cách thiết kế sản phẩm.",
+takeaway:"Trước khi giải vấn đề về người dùng/khách hàng, <strong>dành thời gian quan sát họ trong ngữ cảnh thực</strong> — không phải chỉ survey hay focus group. Hỏi về hành vi thực, không phải ý kiến hay dự định: «Lần cuối bạn [gặp vấn đề này], bạn đã làm gì?»"},
+
+{cat:"thongtin",vi:"Triangulation — xác minh từ nhiều nguồn",en:"Triangulation",
+short:"<strong>Triangulation</strong>: xác nhận một kết luận từ ít nhất <strong>3 nguồn hoặc phương pháp độc lập</strong> — khi nhiều nguồn khác nhau cùng chỉ về một kết luận, độ tin cậy tăng mạnh; khi mâu thuẫn, cần điều tra thêm.",
+detail:"Xuất phát từ địa lý (đo vị trí từ 3 điểm), triangulation áp dụng trong nghiên cứu: (1) <strong>Data triangulation</strong>: nhiều nguồn dữ liệu — survey, analytics, phỏng vấn; (2) <strong>Method triangulation</strong>: nhiều phương pháp — quantitative + qualitative; (3) <strong>Investigator triangulation</strong>: nhiều nhà nghiên cứu độc lập; (4) <strong>Theory triangulation</strong>: kiểm tra từ nhiều framework lý thuyết. Đặc biệt quan trọng khi: stakes cao; giải pháp đắt và khó hoàn tác; vấn đề phức tạp và dữ liệu không rõ ràng. Khi hai nguồn mâu thuẫn — đây là <strong>signal quan trọng</strong> để điều tra thêm, không phải bỏ qua một nguồn.",
+example:"Startup tin rằng vấn đề chính của khách hàng là «giá cao». Triangulation: (1) Survey 200 người: 60% nói giá là rào cản; (2) Phỏng vấn sâu 15 người: phần lớn thực ra nhắc đến «không tin vào chất lượng» nhiều hơn giá; (3) Phân tích churn data: khách rời bỏ sau tháng đầu — không phải khi tăng giá. Triangulation cho thấy vấn đề thực sự là trust, không phải price.",
+takeaway:"Với mọi kết luận quan trọng, <strong>kiểm chứng bằng ít nhất 2-3 nguồn hoặc phương pháp độc lập</strong>. Khi các nguồn mâu thuẫn — đó là thông tin quan trọng, không phải bất tiện cần giải quyết bằng cách chọn nguồn «thuận tiện» hơn."},
+
+// ===== 9. TÂM LÝ & RÀO CẢN NHẬN THỨC =====
+{cat:"tamly",vi:"Cố định nhận thức (Functional Fixedness)",en:"Functional Fixedness",
+short:"<strong>Cố định chức năng (functional fixedness)</strong>: xu hướng chỉ nhìn thấy đồ vật/khái niệm theo chức năng quen thuộc — ngăn cản việc dùng chúng theo cách mới, sáng tạo để giải quyết vấn đề.",
+detail:"Duncker (1945): bài toán nến cổ điển — đặt cây nến lên tường, chỉ có nến, hộp đinh ghim, và hộp diêm. Hầu hết người cố dùng đinh ghim cắm nến vào tường (thất bại). Giải: dùng <strong>hộp</strong> đinh ghim làm giá đỡ gắn vào tường rồi đặt nến lên. Cố định chức năng: nhìn hộp chỉ là «vật chứa» nên không nghĩ đến dùng làm giá. Biểu hiện trong tổ chức: (1) Dùng công cụ hiện có cho mọi vấn đề; (2) Không nhìn thấy năng lực hiện có có thể được dùng khác đi; (3) Định nghĩa công việc theo chức năng truyền thống. Vượt qua: <strong>«Đây có thể dùng để làm gì khác?»</strong>",
+example:"Nhiều startup SaaS không nhận ra rằng data họ đang thu thập từ khách hàng có thể trở thành sản phẩm riêng — vì họ định nghĩa mình là «công ty phần mềm», không phải «công ty data». LinkedIn nhận ra profile data của user là sản phẩm cho nhà tuyển dụng — pivot từ mạng xã hội → business intelligence tool.",
+takeaway:"Định kỳ hỏi về nguồn lực, kỹ năng, và tài sản hiện có: <strong>«Thứ này đang làm gì? Nó còn có thể làm gì khác?»</strong> Đặc biệt với: data, network, quy trình, và nhân sự — thường có nhiều ứng dụng tiềm năng chưa được khai thác."},
+
+{cat:"tamly",vi:"Cái bẫy tư duy cố định",en:"Mental Set / Einstellung Effect",
+short:"<strong>Einstellung effect</strong>: xu hướng áp dụng giải pháp đã từng hiệu quả cho vấn đề tương tự — ngay cả khi có giải pháp đơn giản hơn tồn tại. Kinh nghiệm đôi khi là rào cản, không phải lợi thế.",
+detail:"Luchins (1942): bài toán đong nước — sau khi giải nhiều bài theo cùng một công thức phức tạp, người ta tiếp tục dùng công thức đó cho bài có thể giải đơn giản hơn nhiều, thậm chí không nhìn thấy cách đơn giản. Trong tổ chức: (1) <strong>Chuyên gia có thể bị ảnh hưởng nặng nhất</strong> — «đây là cách chúng tôi vẫn làm»; (2) <strong>Thành công trước đây</strong> tạo ra mental set mạnh nhất; (3) <strong>«Expert Beginner»</strong>: người đủ kinh nghiệm để nghĩ mình biết tất cả nhưng chưa đủ để nhận ra giới hạn. Biện pháp: <strong>«beginner's mind»</strong> (Zen) — tiếp cận vấn đề như lần đầu, đặt câu hỏi «ngây thơ».",
+example:"Kodak có đội kỹ sư phát minh ra máy ảnh kỹ thuật số năm 1975 — nhưng mental set của ban lãnh đạo là «chúng ta là công ty film» ngăn cản việc nhìn nhận digital là tương lai, không phải threat cần phòng thủ. Blockbuster tương tự với Netflix.",
+takeaway:"Khi vấn đề quen thuộc, <strong>chủ động tạm gác kinh nghiệm và hỏi: «Nếu tôi chưa từng giải quyết loại vấn đề này, tôi sẽ tiếp cận thế nào?»</strong> Mời người mới hoàn toàn vào team giải quyết vấn đề — họ không có mental set của bạn."},
+
+{cat:"tamly",vi:"Tư duy nhóm và đồng thuận giả",en:"Groupthink",
+short:"<strong>Tư duy nhóm (groupthink)</strong>: nhóm gắn kết cao đồng thuận nhanh, tự kiểm duyệt bất đồng, và tạo ra <strong>ảo tưởng đồng thuận</strong> — dẫn đến quyết định tệ dù tập thể vẫn tin là đúng.",
+detail:"Irving Janis nghiên cứu groupthink từ các thảm họa lịch sử: vụ xâm lược Vịnh Con Heo (Bay of Pigs), thảm họa Challenger. Các triệu chứng: (1) <strong>Ảo tưởng về bất khả chiến bại</strong>; (2) <strong>Tự kiểm duyệt</strong> — không ai muốn phá không khí tích cực; (3) <strong>Áp lực lên người bất đồng</strong>; (4) <strong>«Mind guards»</strong>: người chặn thông tin tiêu cực từ bên ngoài. Điều kiện tạo ra groupthink: nhóm gắn kết cao, cô lập khỏi ý kiến bên ngoài, leader mạnh có xu hướng áp đặt. Biện pháp: <strong>Devil's advocate</strong> chính thức, thu thập ý kiến ẩn danh, mời người ngoài phản biện, lãnh đạo chia sẻ ý kiến sau cùng.",
+example:"NASA Challenger: tất cả kỹ sư có mặt đêm trước vụ phóng lo ngại về O-ring trong thời tiết lạnh. Nhưng áp lực lịch trình và văn hóa tổ chức («không được làm chậm chương trình») khiến không ai lên tiếng đủ mạnh. 7 phi hành gia thiệt mạng. Bài học: groupthink trong văn hóa «không được làm chậm» cực kỳ nguy hiểm.",
+takeaway:"Trong mỗi cuộc họp quan trọng, <strong>chỉ định một người đóng vai devil's advocate</strong> — nhiệm vụ: tìm mọi lý do tại sao giải pháp này sai. Thu thập ý kiến cá nhân ẩn danh trước khi thảo luận nhóm. Lãnh đạo chia sẻ ý kiến sau cùng."},
+
+{cat:"tamly",vi:"Mù điểm và vùng không biết",en:"Blind Spots and Unknown Unknowns",
+short:"<strong>«Unknown unknowns»</strong> (Rumsfeld): điều bạn không biết là mình không biết — nguy hiểm hơn «known unknowns» (biết là không biết) vì không thể chủ động tìm kiếm. Nhận ra mù điểm là kỹ năng meta-cognitive quan trọng.",
+detail:"Johari Window: 4 ô — Open (bạn biết, người khác biết), Hidden (bạn biết, người khác không biết), <strong>Blind spot</strong> (người khác biết, bạn không biết), Unknown (cả hai không biết). Trong giải quyết vấn đề: blind spots thường đến từ (1) <strong>Giả định ẩn chưa được kiểm tra</strong>; (2) <strong>Góc nhìn bị giới hạn</strong> bởi background và kinh nghiệm; (3) <strong>Thông tin không được chia sẻ</strong> bởi người có quyền lực. Cách giảm blind spots: đa dạng nhận thức trong team; feedback từ người ngoài; red team; pre-mortem. Không thể loại bỏ hoàn toàn blind spots — nhưng có thể giảm kích thước của chúng.",
+example:"Công ty sản xuất xe hơi không thể hình dung smartphone sẽ thay đổi kỳ vọng về UX phương tiện — đây là unknown unknown vì nó đến từ lĩnh vực hoàn toàn khác. Blockbuster không biết rằng họ không biết về tầm quan trọng của streaming infrastructure — blind spot.",
+takeaway:"Thường xuyên hỏi: <strong>«Điều gì mà những người thành công trong lĩnh vực này biết nhưng tôi chưa biết?»</strong> Tìm người từ lĩnh vực hoàn toàn khác để nhìn vào vấn đề của bạn — họ thấy blind spots mà bạn vô hình với."},
+
+{cat:"tamly",vi:"Thiên kiến lạc quan và hoạch định",en:"Optimism Bias and Planning Fallacy",
+short:"<strong>Planning fallacy</strong> (Kahneman): mọi người liên tục đánh giá thấp thời gian, chi phí và rủi ro của dự án — dù biết rằng các dự án tương tự trong quá khứ luôn vượt budget và deadline.",
+detail:"Tỷ lệ trung bình dự án IT: trễ 50%, vượt budget 45%. Gần như ai cũng biết điều này — nhưng vẫn lập kế hoạch lạc quan. Nguyên nhân: <strong>inside view</strong> (nhìn từ bên trong dự án của mình, thấy nó đặc biệt và tối ưu) thay vì <strong>outside view</strong> (nhìn từ bên ngoài — «dự án loại này thường mất bao lâu?»). Biện pháp Kahneman: <strong>Reference class forecasting</strong> — tìm «base rate» của dự án tương tự và dùng đó làm anchor, sau đó điều chỉnh theo đặc điểm riêng. Thêm <strong>«planning buffer»</strong> hệ thống: ít nhất 20-50% cho thời gian và budget.",
+example:"Đường hầm Channel Tunnel giữa Anh-Pháp: estimate ban đầu £2.6 tỷ, thực tế £4.65 tỷ (gấp 1.8 lần). Sydney Opera House: estimate 7 triệu AUD, thực tế 102 triệu AUD (gấp 14.6 lần). Không phải do lập kế hoạch kém — mà do planning fallacy có hệ thống. Reference class forecasting cho thấy: large infrastructure projects thường vượt budget 44% và 86% trễ hơn dự kiến.",
+takeaway:"Khi lập kế hoạch dự án, <strong>tìm 5-10 dự án tương tự và xem thực tế của họ như thế nào</strong> (outside view). Dùng median (không mean) của dự án tương tự làm baseline. Sau đó điều chỉnh lên vì «dự án của mình có những rủi ro riêng» — không điều chỉnh xuống vì «dự án của mình tốt hơn trung bình»."},
+
+{cat:"tamly",vi:"Rào cản cái tôi và nhận lỗi",en:"Ego Barrier and Admitting Mistakes",
+short:"Cái tôi (<strong>ego</strong>) là rào cản lớn nhất trong giải quyết vấn đề: người ta bảo vệ giải pháp của mình thay vì tìm giải pháp đúng, không thể nói «tôi sai», và tránh thừa nhận không biết.",
+detail:"Ray Dalio («Principles»): <strong>ego barrier</strong> và <strong>blind spots</strong> là hai trở ngại lớn nhất cho ra quyết định tốt. Khi cái tôi bị đe dọa, não chuyển từ «tìm sự thật» sang «bảo vệ hình ảnh» — và ta không nhận ra điều này đang xảy ra. Biểu hiện: tranh luận để «thắng», không thể nói «tôi sai» hoặc «tôi không biết», né tránh feedback tiêu cực, giải thích thất bại do yếu tố ngoài (external attribution bias). Biện pháp: tách biệt «quyết định này có đúng không» và «tôi là người ra quyết định đó» — bản thân có giá trị không phụ thuộc vào việc quyết định đúng hay sai.",
+example:"Intel trong những năm 1980 đang mất thị phần chip nhớ (DRAM) vào tay Nhật Bản. Andy Grove hỏi Gordon Moore: «Nếu hội đồng quản trị sa thải chúng ta và thuê CEO mới, CEO đó sẽ làm gì?» Moore: «Rút khỏi DRAM và tập trung vào microprocessors.» Grove: «Vậy thì tại sao chúng ta không tự làm điều đó?» Câu hỏi «CEO mới sẽ làm gì» giúp thoát khỏi ego attachment vào quyết định cũ.",
+takeaway:"Khi giải quyết vấn đề, thực hành nói thường xuyên: <strong>«Tôi không biết.» «Tôi có thể đã sai.» «Bạn đúng — cảm ơn đã chỉ ra.»</strong> Khi thấy mình đang tranh luận để «thắng» hơn là tìm sự thật — dừng lại và hỏi: «Tôi đang bảo vệ gì?»"},
+
+// ===== 10. THỰC THI & CẢI TIẾN LIÊN TỤC =====
+{cat:"thuchien",vi:"Kaizen — Cải tiến liên tục",en:"Kaizen",
+short:"<strong>Kaizen</strong> (改善): triết lý Nhật Bản về <strong>cải tiến liên tục từng bước nhỏ</strong> — không chờ đến cải cách lớn, mà mỗi người mỗi ngày tìm một cách nhỏ để làm tốt hơn. Tích lũy theo thời gian tạo ra kết quả phi thường.",
+detail:"Toyota Production System dựa trên Kaizen: mỗi công nhân có thể dừng dây chuyền (andon cord) để chỉ ra vấn đề và đề xuất cải tiến — được xử lý trong vòng giờ. Trong 30 năm, Toyota thực hiện hàng triệu cải tiến nhỏ. Nguyên tắc: (1) <strong>Không có vấn đề nào quá nhỏ</strong> để cải tiến; (2) <strong>Người làm việc biết rõ nhất</strong> cần cải tiến gì; (3) <strong>Cải tiến liên tục</strong>, không phải đợi «đủ lớn» để thay đổi; (4) <strong>Chuẩn hóa sau mỗi cải tiến</strong> — để không quay lại cách cũ. <strong>«1% better every day»</strong>: cải thiện 1% mỗi ngày → sau 365 ngày tốt hơn 37 lần (1.01^365 = 37.8).",
+example:"Cycling team Sky (nay Ineos) của Dave Brailsford dùng triết lý «aggregation of marginal gains»: cải thiện 1% ở mọi thứ liên quan đến đua xe đạp — tư thế ngủ, gối riêng, cách rửa tay để tránh bệnh, thiết kế yên xe nhẹ hơn 50g... Kết quả: Chris Froome và team chiến thắng Tour de France 4 lần trong 5 năm, từ một team chưa từng thắng giải lớn.",
+takeaway:"Xây thói quen hàng tuần: <strong>«Tuần này, quy trình nào có thể cải thiện 1%?»</strong> Chuẩn hóa cải tiến bằng cách viết lại quy trình sau mỗi thay đổi. Đừng chờ «thay đổi lớn» — hàng trăm thay đổi nhỏ tích lũy nhanh hơn."},
+
+{cat:"thuchien",vi:"PDCA — Vòng cải tiến",en:"PDCA Cycle",
+short:"<strong>PDCA (Plan-Do-Check-Act)</strong>: vòng lặp cải tiến có cấu trúc — lên kế hoạch, thực hiện, kiểm tra kết quả, và chuẩn hóa hoặc điều chỉnh. Nền tảng của quản lý chất lượng và cải tiến liên tục.",
+detail:"Deming Cycle (hay Shewhart Cycle): (1) <strong>Plan</strong>: xác định vấn đề, phân tích nguyên nhân, đặt mục tiêu cải tiến, lập kế hoạch hành động; (2) <strong>Do</strong>: thực hiện kế hoạch ở quy mô nhỏ (pilot); (3) <strong>Check</strong>: đo lường kết quả so với mục tiêu, phân tích sai lệch; (4) <strong>Act</strong>: nếu thành công → chuẩn hóa và scale; nếu không → học hỏi và quay lại Plan. PDCA quan trọng không phải vì nội dung mà vì <strong>kỷ luật lặp lại có hệ thống</strong> — phần lớn tổ chức Plan-Do rồi dừng, không bao giờ Check-Act. Biến thể: <strong>OODA Loop</strong> (Observe-Orient-Decide-Act) cho môi trường tốc độ cao.",
+example:"Nhà hàng muốn giảm thời gian chờ món. Plan: giả thuyết — vấn đề ở khâu truyền order từ bàn đến bếp. Do: thử hệ thống order tablet thay vì phiếu giấy trong 1 tuần. Check: thời gian chờ giảm từ 18 xuống 12 phút, nhưng error rate tăng do nhân viên chưa quen. Act: chuẩn hóa hệ thống tablet + đào tạo thêm 30 phút → thực hiện toàn bộ.",
+takeaway:"Với mọi cải tiến, <strong>đừng bỏ qua bước Check và Act</strong>. Đặt lịch review cụ thể khi lập kế hoạch: «Chúng ta sẽ đo [chỉ số X] vào ngày [Y] để biết kế hoạch có hiệu quả không.» Chuẩn hóa những gì hiệu quả, học hỏi từ những gì không."},
+
+{cat:"thuchien",vi:"OKR — Mục tiêu và kết quả then chốt",en:"OKR (Objectives and Key Results)",
+short:"<strong>OKRs</strong>: framework đặt mục tiêu — <strong>Objective</strong> (mục tiêu định tính, truyền cảm hứng) + <strong>Key Results</strong> (kết quả đo được chứng minh đã đạt Objective). Được Google, Intel và hàng nghìn công ty dùng.",
+detail:"John Doerr mang OKRs từ Intel sang Google năm 1999. Nguyên tắc: (1) <strong>Objectives</strong>: tham vọng, truyền cảm hứng, định hướng — không đo được; (2) <strong>Key Results</strong>: cụ thể, đo được, có thời hạn — chứng minh Objective đã đạt; (3) <strong>«Stretch goals»</strong>: OKR đặt ở mức 60-70% là thành công — nếu đạt 100% là đặt không đủ tham vọng; (4) <strong>Transparent và public</strong>: mọi người thấy OKRs của nhau. Phân biệt với KPI: KPI đo hiệu suất hiện tại; OKR drive improvement và change. <strong>«Committed OKRs»</strong> vs <strong>«Aspirational OKRs»</strong>: hai loại với kỳ vọng đạt khác nhau.",
+example:"Google 2001 (khi mới có vài trăm nhân viên). Objective: «Reach more users globally». Key Results: (1) Launch Google trong 10 ngôn ngữ mới; (2) Đạt 100 triệu searches/ngày; (3) Giảm latency xuống dưới 0.5 giây. Mỗi KR cụ thể, đo được, và chứng minh rõ ràng «reach more users» có nghĩa là gì trong quý đó.",
+takeaway:"Khi đặt mục tiêu cho một vấn đề cần giải quyết, dùng OKR format: <strong>«Mục tiêu của chúng ta là [X]. Chúng ta biết đã thành công khi [3 chỉ số cụ thể, đo được, có deadline].»</strong> Key Results phải đủ cụ thể để không cần giải thích thêm."},
+
+{cat:"thuchien",vi:"After Action Review (AAR)",en:"After Action Review",
+short:"<strong>After Action Review (AAR)</strong>: quy trình có cấu trúc sau mỗi sự kiện quan trọng để học hỏi hệ thống — không phải phán xét ai đúng sai, mà để hiểu tại sao kết quả khác với kế hoạch và điều chỉnh cho lần sau.",
+detail:"Được Quân đội Mỹ phát triển từ những năm 1970 sau bài học từ Chiến tranh Việt Nam. Bốn câu hỏi cốt lõi: (1) <strong>«Chúng ta muốn gì xảy ra?»</strong> — kế hoạch và kỳ vọng ban đầu; (2) <strong>«Điều gì thực sự xảy ra?»</strong> — thực tế khách quan, không phán xét; (3) <strong>«Tại sao có sự khác biệt?»</strong> — phân tích nguyên nhân; (4) <strong>«Chúng ta sẽ làm gì khác?»</strong> — action items cụ thể cho lần sau. Nguyên tắc: <strong>blameless, factual, forward-looking</strong>. Không phải «ai làm sai» mà «hệ thống/quy trình nào cho phép điều này xảy ra».",
+example:"Pixar «Braintrust meetings»: sau mỗi giai đoạn phát triển phim, nhóm đạo diễn senior xem rough cut và phản hồi thẳng thắn — không có quyền ra lệnh, chỉ cho feedback. Không phải phán xét giám đốc, mà là cơ chế học hỏi hệ thống. Mỗi phim Pixar từ sau Toy Story đều có nhiều AAR-style sessions — là lý do tại sao chất lượng duy trì ổn định qua nhiều năm.",
+takeaway:"Sau mỗi dự án hay sự kiện quan trọng, <strong>tổ chức AAR 30-60 phút với 4 câu hỏi cốt lõi</strong>. Quan trọng: bắt đầu bằng «điều gì đã diễn ra tốt» trước khi nói về vấn đề — tạo không khí an toàn. Ghi lại và chia sẻ learnings với team rộng hơn."},
+
+{cat:"thuchien",vi:"Retrospective và học hỏi tổ chức",en:"Retrospective and Organizational Learning",
+short:"<strong>Retrospective</strong>: phiên họp định kỳ (thường cuối sprint) để <strong>cải thiện cách làm việc</strong> — không phải về sản phẩm hay kết quả, mà về quy trình và sự hợp tác của team. Nền tảng của Agile.",
+detail:"Chris Argyris phân biệt <strong>single-loop learning</strong> (sửa hành vi để đạt mục tiêu hiện tại) và <strong>double-loop learning</strong> (xem xét lại assumptions và mục tiêu cơ bản). Retrospective tốt thực hiện double-loop learning. Format phổ biến: <strong>«Start-Stop-Continue»</strong> — điều gì nên bắt đầu làm, dừng làm, tiếp tục làm. Format sâu hơn: <strong>«5 Dysfunctions»</strong> (Lencioni) — kiểm tra trust, conflict, commitment, accountability, results. Điều kiện để retrospective hiệu quả: tâm lý an toàn (psychological safety), lãnh đạo tham gia bình đẳng, action items cụ thể và được theo dõi.",
+example:"Team engineering dùng Agile Sprint Retrospective 2 tuần một lần: (1) 10 phút: mỗi người viết post-it notes về Start-Stop-Continue; (2) 15 phút: nhóm post-its theo themes; (3) 15 phút: vote và thảo luận top 3; (4) 10 phút: cam kết action items cho sprint tới với owner cụ thể. Không review kết quả sản phẩm — chỉ review cách làm việc. Sau 1 năm: deployment frequency tăng 3x, bug rate giảm 40%.",
+takeaway:"<strong>Tổ chức retrospective định kỳ cho mọi team</strong>, không chỉ engineering. Bảo đảm: action items cụ thể, có owner và deadline. Theo dõi action items từ retro trước ở đầu retro sau. Không có follow-through → retro trở thành vô nghĩa."},
+
+{cat:"thuchien",vi:"Chuẩn hóa và ghi chép quy trình",en:"Standardization and Process Documentation",
+short:"Mỗi vấn đề được giải quyết tốt là <strong>cơ hội để chuẩn hóa</strong> — ghi chép thành quy trình tái sử dụng được, tránh giải cùng vấn đề nhiều lần, và truyền kiến thức cho người mới.",
+detail:"Toyota: <strong>«Chuẩn hóa là nền tảng của Kaizen»</strong> — không thể cải tiến thứ chưa được chuẩn hóa. Nếu mỗi người giải quyết vấn đề theo cách khác nhau: không thể biết cái gì hiệu quả; không thể dạy cho người mới; không thể phát hiện deviation. Chuẩn hóa tốt: (1) <strong>Ghi chép «tại sao»</strong>, không chỉ «cái gì và như thế nào»; (2) <strong>Cập nhật khi quy trình cải tiến</strong>; (3) <strong>Accessible</strong>: ai cần đều tìm được; (4) <strong>Đủ ngắn</strong> để người ta thực sự đọc. «<strong>Runbooks</strong>» trong engineering; «<strong>SOPs</strong>» (Standard Operating Procedures) trong operation; «<strong>Playbooks</strong>» trong sales.",
+example:"Startup tăng trưởng nhanh từ 5 lên 50 nhân viên: mỗi vấn đề khách hàng được giải bởi người đã gặp vấn đề tương tự, không được viết lại. Khi người đó nghỉ việc, công ty mất 70% «tribal knowledge». So sánh: công ty tương tự nhưng dùng «blameless postmortem + runbook» sau mỗi vấn đề — knowledge được externalized vào documentation, không trong đầu người.",
+takeaway:"Sau mỗi vấn đề được giải quyết thành công, <strong>dành 15-30 phút viết lại thành runbook/SOP</strong>: vấn đề là gì, dấu hiệu nhận biết, bước giải quyết, và điều cần tránh. Lưu ở nơi team có thể tìm thấy. Thói quen này tiết kiệm hàng trăm giờ trong dài hạn."},
+
+{cat:"thuchien",vi:"Quản lý thay đổi và thực thi giải pháp",en:"Change Management",
+short:"Giải pháp kỹ thuật đúng nhưng không được chấp nhận và thực thi là giải pháp thất bại. <strong>Quản lý thay đổi (change management)</strong> giải quyết yếu tố con người trong triển khai — quan trọng không kém thiết kế giải pháp.",
+detail:"McKinsey: 70% các chương trình thay đổi thất bại không phải vì giải pháp sai mà vì yếu tố con người. <strong>Kotter's 8-Step Change Model</strong>: (1) Tạo urgency; (2) Xây dựng coalition; (3) Hình thành vision; (4) Truyền thông vision; (5) Trao quyền; (6) Quick wins; (7) Củng cố gains; (8) Institutionalize. <strong>ADKAR model</strong> (Prosci): Awareness (nhận thức về cần thay đổi) → Desire (mong muốn thay đổi) → Knowledge (biết cách thay đổi) → Ability (có kỹ năng thay đổi) → Reinforcement (được củng cố để duy trì). Sai lầm phổ biến: tập trung vào technical solution, bỏ qua emotional và organizational aspects.",
+example:"Hospital implementing new EMR (Electronic Medical Records): thất bại sau 18 tháng và 50 triệu USD. Lý do: bác sĩ không được tham gia thiết kế → cảm thấy bị áp đặt; đào tạo chỉ 2 giờ không đủ; hệ thống mới làm chậm workflow từ 5 phút/bệnh nhân lên 15 phút → bác sĩ quay lại paper. So sánh với bệnh viện triển khai thành công cùng hệ thống: train 2 tuần + super-users + workflow redesign trước launch.",
+takeaway:"Khi triển khai giải pháp quan trọng, <strong>đầu tư ít nhất bằng thời gian thiết kế giải pháp cho change management</strong>: ai cần thay đổi hành vi? Họ đang ở đâu trong ADKAR? Làm sao tạo early wins để tạo momentum?"},
+
+{cat:"thuchien",vi:"Vòng phản hồi thực thi",en:"Execution Feedback Loop",
+short:"Khoảng cách giữa <strong>giải pháp trên giấy</strong> và <strong>kết quả thực tế</strong> luôn tồn tại — thiết kế vòng phản hồi trong quá trình thực thi giúp phát hiện sớm khi thực tế khác kế hoạch và điều chỉnh kịp thời.",
+detail:"Dwight Eisenhower: <strong>«Plans are useless, but planning is indispensable.»</strong> Kế hoạch thay đổi khi chạm thực tế — điều quan trọng là khả năng phát hiện và thích nghi nhanh. Thiết kế vòng phản hồi thực thi tốt: (1) <strong>Leading indicators</strong>: đo sớm, trong quá trình — không chờ đến cuối dự án; (2) <strong>Clear owner</strong>: ai chịu trách nhiệm theo dõi từng chỉ số; (3) <strong>Cadence</strong>: daily standup (micro), weekly review (tactic), monthly/quarterly review (strategic); (4) <strong>Escalation protocol</strong>: khi nào cần escalate, cho ai, với thông tin gì. <strong>«Single Threaded Owner»</strong> (Amazon): một người chịu trách nhiệm end-to-end và có authority để thay đổi khi cần.",
+example:"SpaceX mission control: mỗi hệ thống có sensor real-time, threshold alert, và on-call engineer. Không chờ đến cuối mission mới biết có vấn đề — phát hiện ngay và có quy trình xử lý. Ngược lại: nhiều startup track metrics hàng tháng → phát hiện vấn đề tháng trước quá muộn để kịp điều chỉnh.",
+takeaway:"Trước khi triển khai bất kỳ giải pháp nào, <strong>thiết kế vòng phản hồi ngay từ đầu</strong>: chỉ số nào sẽ đo, ai đo, bao lâu một lần, và ngưỡng nào trigger hành động. Không «xem kết quả sau» — build measurement vào kế hoạch ngay từ ngày đầu."},
+
+{cat:"thuchien",vi:"Tư duy thiết kế (Design Thinking)",en:"Design Thinking",
+short:"<strong>Design Thinking</strong>: quy trình giải quyết vấn đề lấy con người làm trung tâm — <strong>Empathize, Define, Ideate, Prototype, Test</strong>. Đặc biệt hiệu quả với vấn đề phức tạp, mơ hồ, liên quan đến hành vi con người.",
+detail:"IDEO và Stanford d.school phát triển Design Thinking như phương pháp luận có cấu trúc cho sáng tạo. 5 giai đoạn: (1) <strong>Empathize</strong>: hiểu sâu người dùng — quan sát, phỏng vấn, trải nghiệm cùng họ; (2) <strong>Define</strong>: viết «Point of View» statement — «[USER] cần [NEED] vì [INSIGHT]»; (3) <strong>Ideate</strong>: brainstorming không phán xét, tạo nhiều ý tưởng; (4) <strong>Prototype</strong>: tạo phiên bản thô nhanh để kiểm tra ý tưởng; (5) <strong>Test</strong>: kiểm chứng với người dùng thực, học hỏi, vòng lặp lại. Design thinking không phải tuyến tính — thường nhảy qua lại giữa các giai đoạn. Điểm mạnh: tập trung vào «problem worth solving», không phải «solution to execute».",
+example:"Rethinking hospital patient experience. Empathize: một designer nằm viện 2 ngày — quan sát từ góc độ bệnh nhân: 90% thời gian nhìn trần nhà (không phải đứng như bác sĩ). Define: «Bệnh nhân nằm viện cần cảm thấy được kiểm soát và thoải mái trong môi trường xa lạ, vì họ mất đi sự tự chủ hoàn toàn.» Ideate + Prototype: thử nghiệm tablet riêng cho bệnh nhân điều khiển TV, gọi y tá, đặt đồ ăn. Test: patient satisfaction tăng 30%.",
+takeaway:"Khi giải vấn đề liên quan đến con người, <strong>bắt đầu bằng Empathize — trực tiếp quan sát và trò chuyện với người bị ảnh hưởng</strong>, không phải thảo luận trong phòng họp. Insights từ observation thường khác hoàn toàn với assumptions từ phỏng đoán."},
+
+{cat:"thuchien",vi:"Agile và quản lý linh hoạt",en:"Agile Problem Solving",
+short:"<strong>Agile</strong>: tiếp cận linh hoạt, lặp lại — ưu tiên phản hồi thực tế hơn kế hoạch toàn diện, hợp tác hơn quy trình cứng nhắc, và thích nghi với thay đổi hơn bám vào kế hoạch ban đầu.",
+detail:"Agile Manifesto (2001) phản ứng với waterfall — nhận ra phần lớn phần mềm thất bại vì yêu cầu thay đổi trong khi đang build. Nguyên tắc áp dụng rộng hơn phần mềm: (1) <strong>Deliver early and often</strong>: ra kết quả nhỏ sớm thay vì đợi đến cuối; (2) <strong>Welcome changing requirements</strong>: thay đổi là thực tế, không phải thất bại kế hoạch; (3) <strong>Reflection and adjustment</strong>: retrospective thường xuyên; (4) <strong>Simplicity</strong>: tối đa hóa công việc không cần làm. Khi nào Agile phù hợp: yêu cầu không rõ ràng và sẽ thay đổi; cần phản hồi từ người dùng liên tục; team nhỏ, cross-functional. Khi nào không phù hợp: yêu cầu rất rõ và ổn định; safety-critical systems; regulatory compliance.",
+example:"Washington DC public school system muốn cải cách chương trình học. Waterfall approach: thiết kế toàn bộ curriculum mới trong 3 năm → triển khai. Thực tế: sau 3 năm, giáo viên không chịu dùng vì không phù hợp với lớp học thực tế. Agile approach: pilot 1 môn học ở 3 trường trong 6 tháng → thu phản hồi → điều chỉnh → pilot rộng hơn. Kết quả tốt hơn và được chấp nhận rộng hơn.",
+takeaway:"Khi đối mặt với vấn đề phức tạp, <strong>ưu tiên thực hiện nhanh phiên bản nhỏ để học hỏi</strong>, hơn là lập kế hoạch hoàn hảo. Hỏi: «Phần nhỏ nhất có thể triển khai trong 2 tuần để có phản hồi thực tế là gì?»"},
+
+{cat:"thuchien",vi:"Giải quyết vấn đề từ gốc rễ không tái phát",en:"Permanent Problem Resolution",
+short:"Giải quyết vấn đề thực sự không phải «vá lỗi» mà là <strong>thay đổi hệ thống</strong> để vấn đề không thể tái phát — hoặc nếu tái phát, được phát hiện và xử lý tự động.",
+detail:"Phân biệt ba cấp độ giải pháp: (1) <strong>Workaround</strong>: bỏ qua vấn đề bằng cách đi vòng — nhanh nhưng vấn đề vẫn còn đó; (2) <strong>Fix</strong>: vá vấn đề — giải quyết instance cụ thể nhưng root cause có thể còn; (3) <strong>Prevention</strong>: thay đổi hệ thống để vấn đề không xảy ra — mất công nhất nhưng ROI cao nhất. Toyota: <strong>«Jidoka»</strong> — tự động hóa với trí tuệ con người: máy tự dừng khi phát hiện lỗi, không cần người giám sát liên tục. Giải pháp tốt nhất: làm vấn đề <strong>impossible to ignore</strong> (không thể bỏ qua) khi nó xảy ra, hoặc <strong>impossible to happen</strong> (không thể xảy ra).",
+example:"Server bị tấn công lần thứ 3 trong năm. Workaround: block IP tấn công. Fix: patch lỗ hổng cụ thể. Prevention: (1) Security scan tự động trong CI/CD pipeline — không thể merge code chưa qua security check; (2) Infrastructure as Code với security baseline bắt buộc; (3) Pen testing quarterly. Sau prevention: cùng loại tấn công không thể thành công vì bị phát hiện và block tự động.",
+takeaway:"Khi giải quyết vấn đề tái phát, hỏi: <strong>«Làm sao để vấn đề này không thể xảy ra nữa (impossible), hoặc không thể bị bỏ qua khi xảy ra (auto-detect)?»</strong> Đầu tư vào prevention thay vì lặp lại fix."},,
+// ===== BỔ SUNG ĐỦ 100 =====
+// Thêm entries cho các category còn thiếu
+// dinhnghia (cần thêm 2), phanra (thêm 3), nguyen (thêm 2), sangtao (thêm 3), mohinh (thêm 4)
+// hethong (thêm 1), thunghiem (thêm 4), thongtin (thêm 4), tamly (thêm 5), thuchien (thêm 5)
+
+{cat:"dinhnghia",vi:"Phân tích khoảng trắng",en:"White Space Analysis",
+short:"Tìm kiếm các <strong>khoảng trắng (white spaces)</strong> — nhu cầu chưa được đáp ứng, vấn đề chưa được giải, hay cơ hội chưa ai nhìn thấy — bằng cách quan sát kỹ lưỡng những gì <em>không</em> tồn tại, không chỉ những gì đang tồn tại.",
+detail:"Nhiều vấn đề và cơ hội tốt nhất nằm ở những chỗ không ai đang nhìn — vì mọi người tập trung vào những gì đang có. White space analysis đặt câu hỏi: <strong>«Điều gì cần tồn tại mà chưa tồn tại?»</strong> và <strong>«Ai đang bị bỏ qua trong giải pháp hiện tại?»</strong>. Công cụ tìm white space: (1) <strong>Unmet needs mapping</strong>: vẽ bản đồ tất cả nhu cầu người dùng, đánh dấu những gì chưa có giải pháp; (2) <strong>Job-to-be-done analysis</strong>: tìm «việc» khách hàng cần làm nhưng chưa có công cụ tốt; (3) <strong>Extreme user research</strong>: người dùng ở hai đầu cực (expert và beginner) thường cho thấy white spaces rõ nhất.",
+example:"Post-it Note: 3M đã có keo dính mạnh — white space là loại keo dính <em>yếu</em> có thể bóc ra. Spencer Silver phát minh keo yếu năm 1968 nhưng không ai thấy ứng dụng. Art Fry 6 năm sau nhận ra white space: bookmark cho sách thánh ca cần bám nhưng không để lại vết. White space tồn tại trong 6 năm trước khi ai đó nhìn thấy.",
+takeaway:"Định kỳ hỏi về người dùng/khách hàng: <strong>«Họ đang làm workaround gì mà chúng ta chưa giải quyết? Họ kêu ca về điều gì mà chưa ai fix?»</strong> Những workaround và complaints đó thường là dấu hiệu của white space quan trọng nhất."},
+
+{cat:"dinhnghia",vi:"Đặt vấn đề từ dữ liệu",en:"Data-Driven Problem Framing",
+short:"Sử dụng <strong>dữ liệu thực tế</strong> để định nghĩa vấn đề chính xác và khách quan — thay vì dựa vào cảm giác, giả định hay ý kiến của người có quyền lực nhất trong phòng.",
+detail:"Nhiều vấn đề được định nghĩa dựa trên quan điểm chủ quan: người quản lý cấp cao nghĩ vấn đề là X, nhưng dữ liệu thực tế chỉ ra vấn đề là Y. <strong>Data-driven problem framing</strong> yêu cầu: (1) Thu thập dữ liệu khách quan TRƯỚC khi đặt ra giả thuyết về vấn đề; (2) Để dữ liệu dẫn dắt định nghĩa vấn đề, không phải hierarchy; (3) Phân biệt <strong>data facts</strong> (sự thật đo được) và <strong>interpretations</strong> (diễn giải có thể tranh luận). Kỹ năng quan trọng: đặt câu hỏi «dữ liệu nào sẽ thay đổi cách chúng ta định nghĩa vấn đề này?»",
+example:"CEO tin vấn đề là «nhân viên thiếu kỹ năng» (giải pháp: đào tạo nhiều hơn). Dữ liệu thực tế: employee engagement survey cho thấy kỹ năng không phải vấn đề — nhân viên thiếu quyền tự quyết và thông tin để hoàn thành công việc (vấn đề là cơ cấu, không phải năng lực). Đào tạo nhiều hơn không giải quyết được vấn đề thực sự.",
+takeaway:"Trước khi định nghĩa vấn đề trong cuộc họp, <strong>thu thập ít nhất 3 loại dữ liệu khác nhau</strong> về biểu hiện của vấn đề. Đặt câu hỏi: «Dữ liệu nào có thể bác bỏ giả thuyết hiện tại của chúng ta về vấn đề?»"},
+
+{cat:"phanra",vi:"Phân tích độ phức tạp",en:"Complexity Analysis",
+short:"Đánh giá <strong>mức độ phức tạp thực sự</strong> của vấn đề trước khi chọn phương pháp giải — vấn đề đơn giản cần quy trình đơn giản; vấn đề phức tạp cần cách tiếp cận khác.",
+detail:"<strong>Cynefin Framework</strong> (Dave Snowden) phân loại vấn đề thành 5 miền: (1) <strong>Clear/Simple</strong>: nguyên nhân-hậu quả rõ, best practice tồn tại — áp dụng SOP; (2) <strong>Complicated</strong>: cần chuyên gia phân tích, có good practice — analyze và apply; (3) <strong>Complex</strong>: không có đáp án rõ, nguyên nhân-hậu quả chỉ thấy sau khi xảy ra — probe-sense-respond; (4) <strong>Chaotic</strong>: không có pattern, hành động ngay lập tức — act-sense-respond; (5) <strong>Disorder</strong>: không biết mình đang ở đâu. Sai lầm phổ biến: áp dụng giải pháp Simple cho vấn đề Complex, hoặc overanalyze vấn đề Simple.",
+example:"Vấn đề login không hoạt động (Simple) → áp dụng troubleshooting checklist, không cần brainstorming sáng tạo. Cải thiện tỷ lệ giữ chân nhân viên (Complex) → không có best practice duy nhất, cần probe-sense-respond: thử nhiều intervention nhỏ, đo kết quả, và học. Áp dụng SOP cho vấn đề Complex → thất bại vì SOP giả định environment ổn định.",
+takeaway:"Trước khi chọn phương pháp giải quyết, hỏi: <strong>«Vấn đề này thuộc miền nào trong Cynefin? Cách tiếp cận phù hợp là gì?»</strong> Đừng dùng cùng một phương pháp cho mọi loại vấn đề."},
+
+{cat:"phanra",vi:"Phân tích giá trị và ưu tiên MoSCoW",en:"MoSCoW Prioritization",
+short:"<strong>MoSCoW</strong>: Must Have (phải có), Should Have (nên có), Could Have (có thể có), Won't Have (không có lần này) — framework đơn giản để ưu tiên yêu cầu và phạm vi trong giải quyết vấn đề.",
+detail:"MoSCoW xuất phát từ Agile/DSDM và đặc biệt hữu ích khi có nhiều yêu cầu cạnh tranh với nguồn lực hạn hẹp. Quy tắc vàng: <strong>Must Have</strong> nên chiếm không quá 60% effort — nếu nhiều hơn, không đủ thời gian và nguồn lực, hoặc không ai muốn phân loại thẳng thắn. Cách sử dụng hiệu quả: (1) Yêu cầu mỗi stakeholder phân loại độc lập; (2) Thảo luận về sự khác biệt — thường tiết lộ assumptions ẩn; (3) Must Have là «nếu thiếu, giải pháp thất bại hoàn toàn» — không phải «tốt để có». Lỗi phổ biến: tất cả mọi thứ đều là Must Have vì không ai muốn hy sinh ưu tiên của mình.",
+example:"Team thiết kế lại quy trình onboarding. 15 yêu cầu ban đầu: sau MoSCoW, chỉ 4 là thực sự Must Have (setup IT account, meeting với manager, tour văn phòng, giới thiệu team). 5 Should Have (buddy program, 30-60-90 day plan...). 6 còn lại Could/Won't Have. Focus vào 4 Must Have trước — tránh tình trạng làm dàn trải, không hoàn thành gì đúng hạn.",
+takeaway:"Khi có nhiều yêu cầu, <strong>dùng MoSCoW và kiên quyết giữ Must Have ≤60% total effort</strong>. Nếu mọi thứ đều Must Have — đó là dấu hiệu cần thảo luận khó khăn hơn về ưu tiên thực sự, không phải ưu tiên kỳ vọng."},
+
+{cat:"phanra",vi:"Cây quyết định và phân nhánh",en:"Decision Tree Analysis",
+short:"<strong>Cây quyết định (decision tree)</strong>: mô hình hóa chuỗi quyết định và sự kiện ngẫu nhiên theo hình cây phân nhánh — giúp trực quan hóa tất cả con đường có thể và tính xác suất hoặc giá trị kỳ vọng của từng con đường.",
+detail:"Cây quyết định gồm: (1) <strong>Decision nodes (nút quyết định)</strong>: điểm bạn lựa chọn; (2) <strong>Chance nodes (nút ngẫu nhiên)</strong>: điểm xác suất quyết định; (3) <strong>Terminal nodes (nút kết thúc)</strong>: kết quả cuối cùng. Ưu điểm: buộc phải ước tính xác suất và giá trị tường minh; phát hiện hidden dependencies; cho phép tính ngược từ kết quả. Giới hạn: chỉ phù hợp khi có thể ước tính xác suất; trở nên phức tạp với nhiều variables. Kết hợp với <strong>Expected Value (EV)</strong> để so sánh các nhánh: EV = Σ(xác suất × kết quả).",
+example:"Quyết định có nên kiện đối tác về hợp đồng: Nếu kiện (60% thắng → nhận 500 triệu; 40% thua → tốn 100 triệu phí luật): EV = 0.6×500 − 0.4×100 = 260 triệu. Nếu thương lượng (70% đạt thỏa thuận 300 triệu; 30% thất bại → buộc phải kiện): EV = 0.7×300 + 0.3×260 = 288 triệu. Thương lượng có EV cao hơn và ít rủi ro hơn.",
+takeaway:"Với quyết định quan trọng có nhiều bất định, <strong>vẽ cây quyết định để bắt buộc ước tính xác suất tường minh</strong>. Không cần hoàn hảo — process của việc phải đặt con số làm lộ ra những điều bạn không biết mình không biết."},
+
+{cat:"nguyen",vi:"Phân tích nhân quả vòng (Causal Loop Diagram)",en:"Causal Loop Diagram",
+short:"<strong>Causal Loop Diagram (CLD)</strong>: sơ đồ mũi tên biểu diễn quan hệ nhân quả giữa các biến trong hệ thống — giúp nhìn thấy <strong>vòng phản hồi ẩn</strong> và hiểu tại sao vấn đề dai dẳng dù đã can thiệp nhiều lần.",
+detail:"CLD là công cụ trực quan hóa cơ bản của systems thinking. Mũi tên dương (+): khi A tăng, B tăng theo (hoặc ngược lại). Mũi tên âm (−): khi A tăng, B giảm. <strong>Reinforcing loop (R)</strong>: vòng lặp khuếch đại — số chẵn mũi tên âm. <strong>Balancing loop (B)</strong>: vòng lặp điều chỉnh — số lẻ mũi tên âm. Quy trình: (1) Liệt kê các biến quan trọng; (2) Vẽ mũi tên quan hệ nhân quả; (3) Xác định loại vòng phản hồi; (4) Tìm điểm can thiệp. CLD không cần chính xác tuyệt đối — giá trị ở chỗ buộc phải suy nghĩ về cơ chế, không phải điểm chính xác.",
+example:"Vòng tái đào tạo nhân viên: Kỹ năng thấp → Sai lỗi nhiều → Khách hàng không hài lòng → Áp lực lên nhân viên tăng → Turnover tăng → Kinh nghiệm team giảm → Kỹ năng thấp. Đây là <strong>Reinforcing loop</strong> tự củng cố tiêu cực. Can thiệp vào turnover (tăng lương) không bền vững. Điểm can thiệp thực sự: phá vòng bằng cách giảm sai lỗi ngay từ đầu qua quy trình tốt hơn và handover cẩn thận.",
+takeaway:"Khi vấn đề không cải thiện dù đã can thiệp, <strong>vẽ CLD đơn giản</strong> (10-15 biến, 15-30 phút) để tìm vòng phản hồi ẩn. Hỏi: «Can thiệp của chúng ta đang tác động vào vòng nào? Có vòng nào đang bù trừ lại không?»"},
+
+{cat:"nguyen",vi:"Ishikawa số hóa hiện đại",en:"Digital Root Cause Analysis",
+short:"Hiện đại hóa phân tích nguyên nhân bằng cách kết hợp <strong>dữ liệu định lượng</strong> với công cụ truyền thống (Fishbone, 5 Whys) — xác nhận giả thuyết nguyên nhân bằng số liệu thay vì chỉ bằng trực giác.",
+detail:"Phân tích nguyên nhân truyền thống dựa nhiều vào brainstorming và kinh nghiệm — dễ dẫn đến <strong>confirmation bias</strong> (tìm nguyên nhân phù hợp với niềm tin sẵn có). Tiếp cận hiện đại: (1) <strong>Hypothesis-driven RCA</strong>: đặt giả thuyết nguyên nhân rõ ràng từ Fishbone; (2) <strong>Data validation</strong>: kiểm chứng từng giả thuyết bằng dữ liệu thực tế; (3) <strong>A/B analysis</strong>: so sánh khoảng thời gian/nhóm có và không có nguyên nhân giả định; (4) <strong>Correlation analysis</strong>: xác nhận tương quan trước khi tìm nhân quả. Kết hợp <strong>statistical process control (SPC)</strong> để phân biệt common cause variation và special cause variation.",
+example:"Chất lượng sản phẩm giảm: Fishbone gợi ý 4 nguyên nhân tiềm năng. Xác nhận bằng data: (1) Nguyên nhân «nhà cung cấp mới» — so sánh defect rate trước/sau khi đổi nhà cung cấp → tương quan rõ (p<0.05). (2) Nguyên nhân «nhân viên mới» — defect rate của nhân viên mới vs cũ: không có sự khác biệt đáng kể. Loại bỏ giả thuyết 2, tập trung vào giả thuyết 1.",
+takeaway:"Sau khi vẽ Fishbone, <strong>đặt ngay câu hỏi: «Dữ liệu nào sẽ xác nhận hoặc bác bỏ mỗi nhánh nguyên nhân?»</strong> Sau đó thu thập dữ liệu đó TRƯỚC khi quyết định đâu là root cause và can thiệp."},
+
+{cat:"sangtao",vi:"Tư duy thiết kế theo nguyên mẫu",en:"Prototype Thinking",
+short:"<strong>Prototype thinking</strong>: tư duy bằng cách <strong>tạo ra và kiểm tra</strong>, không chỉ suy nghĩ — ngay cả prototype thô nhất cũng tiết lộ thông tin không thể có từ thảo luận lý thuyết.",
+detail:"IDEO: <strong>«Build to think, not think to build»</strong> — prototype không phải là bước cuối sau khi đã nghĩ xong, mà là công cụ tư duy từ sớm. Prototype có thể là: giấy/pencil sketch, storyboard, roleplay, cardboard mockup, landing page giả, hoặc video demo. Nguyên tắc prototype tốt: (1) <strong>Xác định mục đích</strong>: prototype này trả lời câu hỏi gì?; (2) <strong>Đủ thô</strong>: đừng đầu tư quá nhiều — bạn sẽ muốn bỏ; (3) <strong>Test sớm</strong>: với người dùng thực trong ngữ cảnh thực; (4) <strong>Fail quickly</strong>: nếu prototype không hoạt động, tốt — bạn học được điều quan trọng với chi phí thấp.",
+example:"IDEO thiết kế xe đẩy siêu thị mới: không vẽ bản thiết kế kỹ thuật, thay vào đó làm prototype bằng tubing, zip tie và lưới trong 1 ngày. Đưa vào siêu thị thực để quan sát người mua hàng dùng. Trong 3 giờ đầu: phát hiện 7 insight quan trọng mà không thảo luận nào trong phòng họp có thể tìm ra.",
+takeaway:"Thay vì thảo luận thêm một giờ nữa, hỏi: <strong>«Prototype đơn giản nhất để kiểm tra ý tưởng này là gì và có thể tạo trong 1 giờ không?»</strong> Prototype bằng giấy, roleplay, hay Wizard of Oz đều hợp lệ."},
+
+{cat:"sangtao",vi:"Kỹ thuật đặt câu hỏi «Tại sao không?»",en:"Why Not Questioning",
+short:"Bổ sung câu hỏi <strong>«Tại sao không?»</strong> vào quy trình sáng tạo — thách thức trực tiếp các assumption ngăn cản giải pháp tốt nhất, đặc biệt hiệu quả trong tổ chức quen với «không thể làm vậy».",
+detail:"Robert Kennedy: <strong>«Some see things as they are and ask why. I dream of things that never were and ask why not.»</strong> Trong bối cảnh giải quyết vấn đề, «Why not?» là cách hệ thống để: (1) Thách thức ràng buộc mềm — «chúng ta không làm X vì Y» → «tại sao Y lại là ràng buộc?»; (2) Khám phá các lựa chọn bị loại trừ quá sớm — «ai đó từng đề xuất X nhưng bị từ chối» → «tại sao không thử lại?»; (3) Thoát khỏi «that's how we always done it». Kết hợp với <strong>«Worst Possible Idea»</strong>: cố tình nghĩ ra ý tưởng tệ nhất có thể → đảo ngược để tìm ý tưởng tốt.",
+example:"Amazon Prime: không ai nghĩ miễn phí vận chuyển không giới hạn là khả thi tài chính. Jeff Bezos hỏi «Why not?» → phân tích: nếu khách hàng mua nhiều hơn vì miễn phí ship, tần suất cao hơn, loyalty cao hơn → unit economics hoạt động được. Model subscription hàng năm để predictable revenue. Kết quả: Prime thay đổi toàn bộ ngành retail.",
+takeaway:"Trong brainstorming tiếp theo, <strong>sau mỗi ý tưởng bị từ chối, hỏi: «Tại sao không? Điều gì cụ thể ngăn cản điều này?»</strong> Nếu câu trả lời là ràng buộc mềm (thói quen, sợ hãi) — điều tra thêm thay vì chấp nhận."},
+
+{cat:"sangtao",vi:"Phương pháp Six Thinking Hats",en:"Six Thinking Hats",
+short:"Edward de Bono: <strong>Six Thinking Hats</strong> — 6 màu mũ đại diện 6 chế độ tư duy — giúp nhóm tách biệt và khám phá đầy đủ từng góc nhìn thay vì tranh luận lẫn lộn nhiều góc nhìn cùng lúc.",
+detail:"6 chiếc mũ: <strong>Trắng</strong> (dữ kiện và thông tin khách quan), <strong>Đỏ</strong> (cảm xúc và trực giác, không cần giải thích), <strong>Đen</strong> (phán xét tiêu cực, rủi ro, tại sao không hoạt động), <strong>Vàng</strong> (lạc quan, giá trị, tại sao sẽ hoạt động), <strong>Xanh lá</strong> (sáng tạo, ý tưởng mới, tư duy ngang), <strong>Xanh dương</strong> (quản lý quy trình tư duy, meta-thinking). Cách dùng: cả nhóm cùng «đội» một màu mũ tại một thời điểm — tránh tình trạng một người đang sáng tạo (xanh lá) trong khi người khác đang phán xét (đen). Giá trị: <strong>parallel thinking</strong> thay vì adversarial debate — cùng nhìn vấn đề theo một hướng trước khi chuyển.",
+example:"Quyết định có mở văn phòng mới không. Mũ Trắng: thị trường X có 2 triệu potential customers, 3 đối thủ hiện hữu, chi phí mặt bằng 50 triệu/năm. Mũ Đen: chưa có proof-of-concept ở thị trường đó, team chưa có kinh nghiệm local. Mũ Vàng: first mover advantage, talent pool tốt, potential 20% growth. Mũ Xanh lá: thay vì mở văn phòng, partnership với local firm trước? Tất cả góc nhìn được khám phá mà không ai phải «win» cuộc tranh luận.",
+takeaway:"Trong cuộc họp quan trọng tiếp theo, <strong>thử dùng Six Thinking Hats cho 30 phút</strong>: cả nhóm cùng đội một màu trong 5 phút, sau đó chuyển màu. Bắt đầu với Trắng (dữ liệu), kết thúc với Xanh dương (tổng hợp và quyết định)."},
+
+{cat:"mohinh",vi:"Mô hình Cynefin",en:"Cynefin Framework",
+short:"<strong>Cynefin</strong> (Dave Snowden, IBM): framework phân loại vấn đề và bối cảnh ra quyết định thành 5 miền — giúp chọn phương pháp giải quyết phù hợp, không áp dụng cùng một công cụ cho mọi loại vấn đề.",
+detail:"5 miền Cynefin: (1) <strong>Clear (Obvious)</strong>: nguyên nhân-hậu quả rõ ràng, best practice tồn tại → Sense-Categorize-Respond; (2) <strong>Complicated</strong>: có thể phân tích được, cần chuyên gia → Sense-Analyze-Respond; (3) <strong>Complex</strong>: nguyên nhân-hậu quả chỉ biết sau khi xảy ra, nhiều agents tương tác → Probe-Sense-Respond; (4) <strong>Chaotic</strong>: không có pattern, cần hành động ngay → Act-Sense-Respond; (5) <strong>Disorder</strong>: không biết mình đang ở miền nào. Sai lầm phổ biến: dùng complicated (phân tích chuyên sâu) cho complex problems — tốn thời gian mà không có đáp án, vì complex problems không có đáp án đúng duy nhất.",
+example:"Covid-19 March 2020: nhiều chính phủ xử lý như Complicated problem — gọi chuyên gia phân tích tìm «best response». Thực ra là Complex problem — không ai biết cơ chế chính xác, cần Probe-Sense-Respond: thử nhiều biện pháp nhỏ đồng thời (giãn cách, mask, vaccine), đo kết quả nhanh, và mở rộng những gì hiệu quả. Những chính phủ tiếp cận theo Complex (Korea, New Zealand) quản lý tốt hơn.",
+takeaway:"Khi gặp vấn đề mới, <strong>đầu tiên phân loại theo Cynefin: Miền nào?</strong> Clear → áp dụng SOP; Complicated → gọi chuyên gia; Complex → probe-sense-respond (thử nghiệm nhỏ song song); Chaotic → hành động ngay để ổn định. Đừng dùng cùng một approach cho mọi loại."},
+
+{cat:"mohinh",vi:"Mô hình Occam's Razor",en:"Occam's Razor",
+short:"<strong>Occam's Razor (Dao cạo Occam)</strong>: khi có nhiều giải thích cạnh tranh, giải thích đơn giản nhất — ít giả định nhất — thường là đúng nhất. Trong giải quyết vấn đề: ưu tiên giải thích đơn giản trước khi tìm đến giải thích phức tạp.",
+detail:"William of Ockham (thế kỷ 14): <strong>«Entia non sunt multiplicanda praeter necessitatem»</strong> — không nhân thêm thực thể ngoài mức cần thiết. Trong giải quyết vấn đề: (1) <strong>Tránh overcomplicate</strong>: người ta có xu hướng tìm giải thích phức tạp cho những gì có thể đơn giản; (2) <strong>Test đơn giản trước</strong>: bắt đầu từ giả thuyết đơn giản nhất, chỉ phức tạp hóa khi cần; (3) <strong>Parsimony</strong>: mô hình tốt nhất là mô hình đơn giản nhất giải thích được dữ liệu. Giới hạn: Occam's Razor là heuristic, không phải quy luật tuyệt đối — đôi khi thực tế phức tạp.",
+example:"Server chậm đột ngột. Giải thích đơn giản: hết RAM do process tăng đột biến. Giải thích phức tạp: bug trong code gây memory leak, kết hợp với load balancer bị misconfigure, gây cascading failure. Áp dụng Occam's Razor: kiểm tra RAM trước (2 phút) → đúng là đầy RAM → restart service → vấn đề biến mất. Không cần phân tích toàn bộ stack.",
+takeaway:"Khi có nhiều giả thuyết về nguyên nhân, <strong>test cái đơn giản nhất trước</strong>. Hỏi: «Giải thích nào ít giả định nhất mà vẫn phù hợp với tất cả dữ kiện?» Chỉ phức tạp hóa khi giải thích đơn giản đã bị loại trừ."},
+
+{cat:"mohinh",vi:"Mô hình Inversion trong giải quyết vấn đề",en:"Inversion Model",
+short:"<strong>Inversion</strong>: đảo ngược bài toán — thay vì hỏi «làm sao đạt X», hỏi «làm sao chắc chắn thất bại với X», rồi tránh những điều đó. Munger: đây là công cụ tư duy quan trọng nhất bị bỏ qua.",
+detail:"Inversion không chỉ là «suy nghĩ tiêu cực» — đây là cách khai thác khả năng não nhận diện rủi ro tốt hơn cơ hội. Ứng dụng cụ thể: (1) <strong>Pre-mortem</strong>: giả định dự án đã thất bại, nguyên nhân là gì? Tìm và xử lý nguyên nhân đó trước; (2) <strong>Negative brainstorming</strong>: «điều gì chắc chắn phá hủy cuộc họp này?» → tránh làm những điều đó; (3) <strong>Anti-goals</strong>: liệt kê điều không muốn xảy ra song song với goals; (4) <strong>Defensive moat</strong>: nhìn competitive advantages từ góc độ «điều gì khiến đối thủ không muốn/không thể tấn công?»",
+example:"Charlie Munger được hỏi về bí quyết thành công. Trả lời: «Tôi chỉ muốn biết mình sẽ chết ở đâu, để không đến đó.» Cụ thể hơn: Berkshire Hathaway tránh được nhiều thảm họa vì Munger và Buffett thường xuyên hỏi «điều gì có thể phá hủy Berkshire?» và chủ động tránh — không làm gì đòn bẩy quá cao, không lệ thuộc vào người có thể rời đi, không làm lĩnh vực họ không hiểu.",
+takeaway:"Với mọi dự án quan trọng, <strong>làm pre-mortem ngay khi bắt đầu</strong>: «Dự án này thất bại vào năm sau — nguyên nhân có khả năng nhất là gì?» Xếp hạng theo xác suất và impact, sau đó build mitigation ngay vào kế hoạch."},
+
+{cat:"mohinh",vi:"Mô hình Compounding và tư duy dài hạn",en:"Compounding and Long-term Thinking",
+short:"<strong>Lãi kép (compounding)</strong> không chỉ áp dụng cho tài chính — kiến thức, kỹ năng, mối quan hệ, và uy tín đều compound. Tư duy dài hạn nghĩa là đầu tư vào những thứ compound, không chỉ tối ưu ngắn hạn.",
+detail:"Warren Buffett: <strong>«My wealth has come from a combination of living in America, some lucky genes, and compound interest.»</strong> Trong giải quyết vấn đề tổ chức: nhiều quyết định ngắn hạn «hợp lý» nhưng phá hủy compounding dài hạn. Ví dụ: cắt đào tạo để tiết kiệm (ngắn hạn: tiết kiệm 500 triệu; dài hạn: kỹ năng team không compound → năng suất giảm). Ngược lại: đầu tư vào documentation, quy trình, và văn hóa cho phép knowledge compound theo thời gian. Câu hỏi thực hành: <strong>«Quyết định này sẽ compound theo hướng nào trong 10 năm?»</strong>",
+example:"Jeff Bezos từ chối các quyết định kinh doanh có thể lợi ngắn hạn nhưng phá hủy customer trust (một thứ compound theo thời gian): «Chúng ta đã đồng ý ngay từ đầu rằng chúng ta sẽ không bao giờ đánh đổi sự hài lòng của khách hàng dài hạn để lấy lợi nhuận ngắn hạn.» Customer trust của Amazon compound qua nhiều thập kỷ tạo ra competitive moat không thể mua được.",
+takeaway:"Trước quyết định quan trọng, hỏi: <strong>«Quyết định này tối ưu cho 6 tháng hay cho 10 năm?»</strong> Đặc biệt cẩn thận với các quyết định «tiết kiệm ngắn hạn» có thể phá hủy compound value dài hạn: uy tín, kiến thức, mối quan hệ, văn hóa."},
+
+{cat:"hethong",vi:"Emergent Properties — Thuộc tính nổi sinh",en:"Emergent Properties",
+short:"<strong>Thuộc tính nổi sinh (emergent properties)</strong>: tính chất xuất hiện từ tương tác giữa các phần nhỏ trong hệ thống — không thể dự đoán hay giải thích chỉ từ việc nghiên cứu từng phần riêng lẻ.",
+detail:"<strong>«The whole is greater than the sum of its parts»</strong> (Aristotle). Tính ướt của nước không có trong H hay O riêng lẻ. Ý thức xuất hiện từ neuron nhưng không thể tìm thấy trong một neuron đơn lẻ. Trong giải quyết vấn đề tổ chức: văn hóa, sự đổi mới, và hiệu quả team là emergent properties — không thể tạo ra bằng cách chỉ thay đổi từng cá nhân. Hệ quả: (1) <strong>Không thể giải quyết vấn đề hệ thống bằng cách chỉ tối ưu các phần</strong>; (2) <strong>Cần thay đổi tương tác</strong>, không chỉ thành phần; (3) <strong>Kết quả không thể dự đoán hoàn toàn</strong> — phải test để biết.",
+example:"Airbnb muốn cải thiện chất lượng host. Cách tuyến tính: cải thiện từng host riêng lẻ (đào tạo, khuyến khích). Hiểu emergent: chất lượng host là emergent property từ tương tác giữa review system, pricing algorithm, search ranking, và cộng đồng host. Thay đổi review system (cách host/guest review nhau) tác động mạnh hơn đào tạo trực tiếp — vì thay đổi cơ chế tương tác, không phải từng thành phần.",
+takeaway:"Khi giải pháp tác động trực tiếp vào từng phần không hiệu quả, hỏi: <strong>«Tính chất này có phải là emergent property không? Cơ chế tương tác nào tạo ra nó?»</strong> Thay đổi cơ chế tương tác thường hiệu quả hơn thay đổi từng thành phần."},
+
+{cat:"thunghiem",vi:"Thử nghiệm tự nhiên",en:"Natural Experiments",
+short:"<strong>Natural experiments</strong>: sử dụng sự kiện thực tế đã xảy ra như «thử nghiệm tự nhiên» khi không thể thiết kế A/B test — giúp học hỏi nhân quả từ dữ liệu quan sát khi randomization không khả thi.",
+detail:"Đôi khi không thể thiết kế A/B test (vì đạo đức, chi phí, hay thực tế). Natural experiments xảy ra khi một điều kiện «tự nhiên» tạo ra nhóm so sánh gần tương đương: (1) <strong>Geographic variation</strong>: so sánh vùng có và không có chính sách; (2) <strong>Time variation</strong>: so sánh trước/sau một thay đổi đột ngột; (3) <strong>Regression discontinuity</strong>: so sánh nhóm vừa đủ/vừa thiếu ngưỡng một tiêu chí. Ví dụ kinh điển: nhà kinh tế học Card và Krueger (Nobel 2021) dùng sự khác biệt luật tiền lương tối thiểu giữa hai bang giáp ranh để nghiên cứu tác động tuyển dụng — natural experiment cho phép inference nhân quả.",
+example:"Muốn biết tác động của onboarding mới lên retention nhưng không thể randomize. Natural experiment: công ty có 2 văn phòng triển khai onboarding mới ở thời điểm khác nhau do lý do logistics — có thể so sánh retention của nhân viên tuyển trong 3 tháng trước và sau triển khai ở mỗi văn phòng, kiểm soát các yếu tố khác.",
+takeaway:"Khi không thể A/B test, hỏi: <strong>«Có natural experiment nào xảy ra tự nhiên trong dữ liệu của chúng ta không?»</strong> Tìm sự kiện, thay đổi, hoặc điều kiện đã tạo ra nhóm so sánh tự nhiên gần tương đương."},
+
+{cat:"thunghiem",vi:"Spike và time-boxed research",en:"Time-boxed Research Spikes",
+short:"<strong>Spike</strong> (từ Agile): dành một khoảng thời gian cố định để <strong>giảm bất định</strong> về một câu hỏi kỹ thuật hoặc kinh doanh — không phải xây giải pháp mà là học đủ để ra quyết định tiếp theo.",
+detail:"Spike là «research sprint» có giới hạn thời gian (time-boxed) để trả lời câu hỏi cụ thể: «Có thể làm X được không?», «Approach A hay B phù hợp hơn?», «Giải pháp này tốn bao nhiêu effort?» Khác với prototype: prototype tạo ra artifact; spike tạo ra knowledge. Time-boxing quan trọng: không có giới hạn → research kéo dài vô tận. Với giới hạn 2-4 ngày: buộc phải tập trung vào câu hỏi quan trọng nhất, chấp nhận «đủ để quyết định» thay vì hoàn hảo. Output: decision recommendation + confidence level + assumptions và unknowns còn lại.",
+example:"Team không biết có thể tích hợp với hệ thống của đối tác trong 2 tuần không. Spike 3 ngày: đọc API docs + build proof of concept đơn giản nhất + test với sandbox environment. Outcome: «Tích hợp khả thi trong 2 tuần với approach X, nhưng cần hỏi đối tác về rate limiting trước khi cam kết.» Decision có thể ra sau 3 ngày thay vì 3 tuần uncertainty.",
+takeaway:"Khi gặp bất định lớn ảnh hưởng đến quyết định, <strong>đặt spike 1-3 ngày</strong> với câu hỏi cụ thể và output mong đợi rõ ràng. Time-box là bắt buộc — không có giới hạn thời gian, spike trở thành black hole."},
+
+{cat:"thunghiem",vi:"Phân tích hậu sự kiện (Post-mortem)",en:"Post-mortem Analysis",
+short:"<strong>Post-mortem</strong>: phân tích có cấu trúc sau sự cố hoặc thất bại — không phải để phán xét ai, mà để hiểu hệ thống và quy trình, ngăn chặn tái phát, và xây dựng văn hóa học hỏi.",
+detail:"Blameless post-mortem (Google SRE): <strong>«Chúng ta tin rằng, với đủ thông tin về tình huống, bất kỳ kỹ sư nào cũng có thể mắc sai lầm tương tự.»</strong> Tập trung vào system, không phải individual. Cấu trúc post-mortem tốt: (1) <strong>Timeline</strong>: diễn biến chính xác theo thời gian; (2) <strong>Contributing factors</strong>: các yếu tố góp phần — không phải một nguyên nhân duy nhất; (3) <strong>Impact</strong>: tác động đo được; (4) <strong>Action items</strong>: cụ thể, có owner, có deadline; (5) <strong>«5 Whys»</strong>: đào sâu để tìm root cause. Không phải chỉ cho incidents — post-mortem sau mỗi project lớn (thành công hay thất bại) giúp tổ chức học hỏi.",
+example:"Google sau mỗi outflow lớn: bắt buộc viết postmortem public trong nội bộ trong 48 giờ. Template chuẩn: impact, timeline, root causes, action items. Chia sẻ với toàn công ty — không ai bị blame, chỉ hệ thống được cải thiện. Kết quả: 20 năm văn hóa này tạo ra một trong những engineering cultures học hỏi tốt nhất thế giới.",
+takeaway:"Sau sự cố hoặc failure quan trọng, <strong>tổ chức blameless post-mortem trong 72 giờ</strong> với 4 câu hỏi: Điều gì xảy ra? Tại sao? Tác động gì? Chúng ta sẽ thay đổi gì? Action items phải có owner và deadline cụ thể."},
+
+{cat:"thunghiem",vi:"Vòng lặp OODA",en:"OODA Loop",
+short:"<strong>OODA</strong> (John Boyd): Observe (quan sát), Orient (định hướng), Decide (quyết định), Act (hành động) — vòng lặp ra quyết định và hành động nhanh hơn đối thủ tạo ra lợi thế cạnh tranh.",
+detail:"John Boyd: phi công chiến đấu đã thắng nhiều trận không phải vì máy bay tốt hơn mà vì có thể <strong>cycling OODA loop nhanh hơn</strong> đối thủ — khi đối thủ vừa phản ứng với quyết định cũ, bạn đã quyết định mới. Trong kinh doanh: công ty cycling OODA nhanh hơn sẽ thích nghi và phản ứng tốt hơn với thị trường. Yếu tố quan trọng nhất: <strong>Orient</strong> — không phải observation hay action, mà là khả năng diễn giải thông tin qua mental models, culture, và prior experience. Tốc độ OODA được quyết định bởi chất lượng orientation, không phải tốc độ action.",
+example:"Amazon vs traditional retailers: Amazon cycling OODA trong ngày (A/B test sáng, deploy chiều, phân tích tối, điều chỉnh sáng hôm sau). Traditional retailers cycling OODA trong quý (bán hàng, báo cáo cuối quý, họp review, quyết định cho mùa tiếp theo). Amazon có 90x nhiều vòng lặp học hỏi hơn trong cùng thời gian — không phải vì thông minh hơn, mà vì faster OODA.",
+takeaway:"Đánh giá OODA loop của tổ chức: <strong>«Từ khi nhận observation đến khi có action, mất bao lâu?»</strong> Tìm điểm tắc nghẽn: thường là Orient (không có mental model tốt để diễn giải data) hoặc Decide (quá nhiều tầng phê duyệt). Rút ngắn Orient và Decide, không chỉ Observe và Act."},
+
+{cat:"thongtin",vi:"Thu thập thông tin từ người làm việc trực tiếp",en:"Gemba and Frontline Intelligence",
+short:"<strong>Gemba</strong> (源 Japanese: «nơi thực sự»): đến tận nơi vấn đề xảy ra và quan sát trực tiếp — thay vì chỉ dựa vào báo cáo và dữ liệu tổng hợp. Người làm việc trực tiếp thường biết nhiều nhất về vấn đề thực tế.",
+detail:"Toyota: lãnh đạo phải «đi gemba» — đến nhà máy, quan sát dây chuyền, nói chuyện với công nhân trước khi ra quyết định về sản xuất. Tại sao dữ liệu không đủ: (1) <strong>Aggregation mất chi tiết</strong>: dữ liệu tổng hợp ẩn pattern quan trọng; (2) <strong>Reporting bias</strong>: người báo cáo thường báo cáo điều họ nghĩ cấp trên muốn nghe; (3) <strong>Tacit knowledge</strong>: nhiều thứ quan trọng không thể viết thành báo cáo; (4) <strong>Context</strong>: cùng số liệu có ý nghĩa khác khi thấy trong context. «Management by walking around» (MBWA, Tom Peters): lãnh đạo effective dành nhiều thời gian ở «gemba», không phải ở phòng họp.",
+example:"GM vs Toyota tại NUMMI joint venture: khi GM lần đầu gửi managers thăm nhà máy Toyota, họ ngạc nhiên vì tất cả problems đều được hiển thị công khai (trên bảng, bằng andon cord đang bật). GM managers nghĩ đây là dấu hiệu nhà máy tệ. Toyota giải thích: visible problems là healthy — bạn có thể fix thứ bạn thấy. Hidden problems là nguy hiểm thực sự.",
+takeaway:"Với mọi vấn đề quan trọng, <strong>dành ít nhất 1-2 giờ ở «gemba»</strong> — nơi vấn đề thực sự xảy ra. Quan sát, đặt câu hỏi mở, và lắng nghe người làm việc trực tiếp. Điều này thường tiết lộ insights không có trong báo cáo."},
+
+{cat:"thongtin",vi:"Quản lý sự không chắc chắn về thông tin",en:"Information Uncertainty Management",
+short:"Học cách <strong>ra quyết định với thông tin không đầy đủ</strong> — vì thông tin «đủ» hiếm khi tồn tại. Biết khi nào cần thêm thông tin, khi nào đủ rồi, và khi nào chi phí tìm thêm vượt quá lợi ích.",
+detail:"<strong>Value of Information (VoI)</strong>: trước khi tìm kiếm thêm thông tin, hỏi «thông tin này sẽ thay đổi quyết định của tôi không?» Nếu không thay đổi — không cần thu thập. Các trạng thái không chắc chắn: (1) <strong>Known unknowns</strong>: biết là không biết, có thể nghiên cứu; (2) <strong>Unknown unknowns</strong>: không biết là không biết — không thể nghiên cứu trực tiếp, cần diversification và optionality; (3) <strong>Known knowns</strong>: biết và đúng — action trực tiếp; (4) <strong>Known unknowns với cost cao để tìm</strong>: quyết định với dữ liệu hiện có + margin of safety. Powell 40-70 rule: ra quyết định khi có 40-70% thông tin cần thiết — ít hơn 40%: liều quá; hơn 70%: đã chậm.",
+example:"Startup quyết định có nên mở thêm tính năng X không. Research sẽ tốn 2 tuần. Áp dụng VoI: nếu research cho kết quả «khách hàng muốn X» → build; nếu «không muốn» → không build. Nhưng nếu business case cho X đủ mạnh dù chỉ 30% khách hàng muốn → research không thay đổi quyết định → skip research, ra quyết định ngay.",
+takeaway:"Trước khi tìm thêm thông tin, hỏi: <strong>«Thông tin này có thay đổi quyết định của tôi không? Nếu tìm ra kết quả A thì làm gì? Nếu B thì làm gì?»</strong> Nếu câu trả lời giống nhau cho cả A và B — không cần tìm thêm, ra quyết định ngay."},
+
+{cat:"thongtin",vi:"Phân tích dữ liệu định lượng và định tính",en:"Quantitative and Qualitative Data Analysis",
+short:"Dữ liệu định lượng (số liệu) cho biết <strong>«bao nhiêu và như thế nào»</strong>; dữ liệu định tính (phỏng vấn, quan sát) cho biết <strong>«tại sao và như thế nào»</strong>. Giải quyết vấn đề tốt cần cả hai.",
+detail:"Lỗi phổ biến: (1) <strong>Chỉ dùng quant</strong>: biết chính xác «cái gì» đang xảy ra nhưng không hiểu «tại sao» → giải pháp sai hướng; (2) <strong>Chỉ dùng qual</strong>: hiểu «tại sao» nhưng không biết quy mô và mức độ nghiêm trọng → ưu tiên sai. Kết hợp hiệu quả: (1) <strong>Quant để xác định vấn đề</strong>: «metric nào đang xấu đi và bao nhiêu?»; (2) <strong>Qual để hiểu cơ chế</strong>: «tại sao users có hành vi đó?»; (3) <strong>Quant để validate giả thuyết</strong>: «A/B test xác nhận giải pháp hoạt động không?». Thứ tự quan trọng: không bắt đầu bằng qual khi chưa biết quant — sẽ không biết mình đang hiểu điều gì quan trọng.",
+example:"User retention giảm (quant: nhìn ra vấn đề). Phỏng vấn 10 user đã churn (qual: hiểu «tại sao» — feature quan trọng nhất không đủ tốt). A/B test cải tiến feature đó (quant: xác nhận giải thuyết). Nếu chỉ dùng quant: biết retention giảm nhưng không biết làm gì. Nếu chỉ dùng qual: hiểu lý do nhưng không biết có phải lý do phổ biến nhất không.",
+takeaway:"Với mọi vấn đề kinh doanh, dùng <strong>quant để scope (xác định quy mô) và qual để hiểu cơ chế</strong>. Đừng bắt đầu bằng phỏng vấn nếu chưa có dữ liệu về việc vấn đề này lớn đến đâu."},
+
+{cat:"thongtin",vi:"Xây dựng knowledge base và tránh reinventing the wheel",en:"Knowledge Management",
+short:"Hầu hết vấn đề trong tổ chức đã được giải quyết trước đó ở đâu đó — <strong>tổ chức tri thức</strong> tốt giúp tái sử dụng giải pháp đã có thay vì giải lại từ đầu, tiết kiệm thời gian và tránh lặp lại sai lầm.",
+detail:"Knowledge management trong giải quyết vấn đề: (1) <strong>Knowledge capture</strong>: sau mỗi vấn đề giải quyết, ghi lại vấn đề, context, giải pháp thử và kết quả; (2) <strong>Knowledge retrieval</strong>: khi gặp vấn đề mới, tìm kiếm xem có ai đã giải tương tự chưa; (3) <strong>Knowledge sharing</strong>: chia sẻ learnings với team rộng hơn; (4) <strong>Pattern recognition</strong>: nhận ra loại vấn đề và apply giải pháp đã biết hiệu quả. Công cụ: wiki, runbooks, postmortem database, lessons-learned repository. Rào cản phổ biến: không có thời gian document, không biết tìm ở đâu, thông tin lỗi thời.",
+example:"McKinsey's knowledge management: sau mỗi engagement, team viết knowledge document về industry insights và approaches hiệu quả, lưu vào KM system. Consultant mới có thể tìm kiếm «telecom pricing strategy» và ngay lập tức có baseline từ hàng trăm project trước. Không cần bắt đầu từ đầu — có thể standing on shoulders of giants.",
+takeaway:"Sau mỗi vấn đề quan trọng được giải quyết, <strong>dành 20-30 phút viết «lessons learned»</strong>: vấn đề là gì, approaches đã thử và kết quả, giải pháp cuối và lý do. Lưu vào nơi team có thể tìm kiếm. Trong 1 năm, knowledge base này trở thành tài sản đáng giá nhất của team."},
+
+{cat:"tamly",vi:"Thiên kiến ​​trong nhận dạng vấn đề",en:"Problem Recognition Biases",
+short:"Ngay từ bước nhận ra và định nghĩa vấn đề đã có nhiều thiên kiến hoạt động — <strong>availability bias, salience, và selective attention</strong> khiến chúng ta thấy những vấn đề dễ thấy thay vì vấn đề quan trọng nhất.",
+detail:"Ba thiên kiến chính trong nhận dạng vấn đề: (1) <strong>Availability bias</strong>: nhận ra vấn đề tương tự với vấn đề vừa gặp, bỏ qua những vấn đề không quen; (2) <strong>Salience bias</strong>: chú ý đến vấn đề nổi bật, sinh động, hoặc gây cảm xúc mạnh — bỏ qua vấn đề âm thầm nhưng quan trọng hơn; (3) <strong>Selective attention</strong>: chỉ thấy vấn đề trong lĩnh vực mình chuyên môn (carpenter problem: người thợ mộc thấy mọi thứ cần đóng đinh). Biện pháp: checklist định kỳ về các loại vấn đề quan trọng (không chỉ những vấn đề đang la hét); data-driven problem identification; diverse team để mỗi người thấy vấn đề khác nhau.",
+example:"Startup tập trung giải bug (dễ thấy, khách hàng la to) mà bỏ qua technical debt đang tích lũy (khó thấy, im lặng). Sau 2 năm: codebase quá phức tạp, development velocity giảm 70% — vấn đề lớn hơn nhiều so với bugs ban đầu nhưng không ai «thấy» nó vì không ai la to.",
+takeaway:"Hàng tháng, <strong>dành 30 phút «quét» các loại vấn đề bị thiên kiến thường bỏ qua</strong>: vấn đề âm thầm tích lũy, vấn đề ở khu vực không có ai «chủ quản», và vấn đề mà người có vấn đề không biết cách nói. Đừng chỉ giải quyết những gì đang la to nhất."},
+
+{cat:"tamly",vi:"Quản lý năng lượng nhận thức",en:"Cognitive Energy Management",
+short:"<strong>Năng lượng nhận thức</strong> là có hạn — chất lượng giải quyết vấn đề phụ thuộc vào khi nào bạn làm việc với loại vấn đề nào. Phân bổ vấn đề khó vào thời điểm năng lượng nhận thức cao nhất.",
+detail:"Nghiên cứu về <strong>decision fatigue</strong>: Thẩm phán Israel phê duyệt ân xá 65% đầu ngày, gần 0% trước bữa trưa, 65% lại sau bữa trưa — không phải vì họ phân biệt đối xử, mà vì não bộ kiệt sức khi phải liên tục đưa ra quyết định khó. Áp dụng: (1) <strong>Schedule hard problems first</strong>: giải vấn đề phức tạp buổi sáng khi energy cao; (2) <strong>Batch routine decisions</strong>: gộp các quyết định routine lại để giảm số lần chuyển ngữ cảnh; (3) <strong>Automate or eliminate</strong>: mọi quyết định có thể tự động hóa hoặc loại bỏ giải phóng năng lượng cho vấn đề quan trọng; (4) <strong>Protect deep work time</strong>: block ít nhất 2-3 giờ liên tục cho giải quyết vấn đề phức tạp.",
+example:"Jeff Bezos: <strong>«Tôi không schedule meetings trước 10am. Tôi cần vài giờ buổi sáng để làm việc với đầu óc tươi minh trước khi bắt đầu consume calendar.»</strong> Obama: chỉ mặc 2 màu suit (xanh hoặc xám) để loại bỏ một quyết định nhỏ mỗi ngày. Mark Zuckerberg: cùng một bộ đồ mỗi ngày. Không phải eccentric — là quản lý cognitive energy.",
+takeaway:"<strong>Identify peak cognitive hours của bạn</strong> (hầu hết người là 2-4 giờ đầu sau khi thức dậy). Block thời gian đó cho vấn đề khó nhất — không có meetings, không có email. Giải quyết administrative và routine tasks vào cuối ngày khi energy thấp hơn."},
+
+{cat:"tamly",vi:"Chịu đựng sự mơ hồ",en:"Tolerance for Ambiguity",
+short:"<strong>Chịu đựng sự mơ hồ (tolerance for ambiguity)</strong>: khả năng làm việc hiệu quả trong điều kiện không chắc chắn và thông tin không đầy đủ — một trong những đặc điểm quan trọng nhất phân biệt người giải quyết vấn đề giỏi.",
+detail:"Vấn đề phức tạp luôn tồn tại trong bất định. Người có <strong>intolerance for ambiguity</strong>: (1) Vội vàng tìm câu trả lời để kết thúc sự khó chịu; (2) Đơn giản hóa vấn đề quá mức để có cảm giác kiểm soát; (3) Chọn giải pháp quen thuộc thay vì giải pháp đúng; (4) Sợ thừa nhận không biết. Xây dựng tolerance for ambiguity: (1) <strong>Phân biệt uncertainty (không chắc chắn) và risk (đã biết xác suất)</strong>; (2) Học cách nói «Tôi không biết, nhưng đây là cách chúng ta có thể tìm ra»; (3) <strong>Comfortable with provisional answers</strong>: câu trả lời «tốt nhất hiện tại» không phải câu trả lời cuối cùng.",
+example:"NASA Mission Control: phi hành gia có problem không có trong training manual. Sức ép khổng lồ để «biết câu trả lời ngay». Flight director giỏi không vội vàng — nói thẳng «Chúng ta không biết ngay lúc này, đây là những gì chúng ta biết và không biết, đây là timeline để tìm câu trả lời.» Ambiguity tolerance cứu mạng nhiều hơn false certainty.",
+takeaway:"Khi không có câu trả lời ngay, <strong>học cách nói: «Đây là những gì tôi biết chắc, đây là những gì không chắc, và đây là kế hoạch để giảm không chắc chắn trong [timeline cụ thể].»</strong> Honest uncertainty tốt hơn false certainty — đặc biệt khi stakes cao."},
+
+{cat:"tamly",vi:"Tư duy phản biện trong giải quyết vấn đề",en:"Critical Thinking",
+short:"<strong>Tư duy phản biện (critical thinking)</strong>: kỹ năng phân tích, đánh giá và kiểm chứng thông tin và lập luận một cách có hệ thống — không tin hoặc bác bỏ bất cứ điều gì mà không có lý do đủ mạnh.",
+detail:"Tư duy phản biện gồm: (1) <strong>Identify assumptions</strong>: tìm ra giả định ẩn trong lập luận; (2) <strong>Evaluate evidence</strong>: đánh giá chất lượng bằng chứng (nguồn, phương pháp, sample size); (3) <strong>Spot logical fallacies</strong>: nhận ra lỗi lập luận phổ biến (straw man, ad hominem, false dichotomy); (4) <strong>Consider alternative explanations</strong>: luôn hỏi «có giải thích nào khác không?»; (5) <strong>Intellectual humility</strong>: sẵn sàng thay đổi ý kiến khi có bằng chứng. Trong bối cảnh giải quyết vấn đề: tư duy phản biện giúp không nhảy vào giải pháp dựa trên giả định sai, không bị thuyết phục bởi lập luận nghe có vẻ hợp lý nhưng thiếu bằng chứng.",
+example:"Một báo cáo tư vấn kết luận «công ty cần đầu tư 10 tỷ vào X để tăng trưởng». Tư duy phản biện: (1) Giả định ẩn nào trong kết luận này? (thị trường sẽ tiếp tục tăng, không có disruption, công ty có thể execute); (2) Bằng chứng có đủ mạnh không? (sample size, methodology); (3) Có explanation nào khác cho data này không?; (4) Tư vấn có conflict of interest không? Nhiều quyết định tệ đến từ không đặt những câu hỏi này.",
+takeaway:"Trước khi chấp nhận bất kỳ phân tích hay đề xuất nào, <strong>hỏi 4 câu</strong>: «Giả định ẩn là gì? Bằng chứng có đủ mạnh không? Có giải thích nào khác không? Nguồn có conflict of interest không?» Không phải để phủ nhận mọi thứ, mà để hiểu sâu hơn."},
+
+{cat:"thuchien",vi:"Phân tích tác động và ma trận rủi ro",en:"Impact and Risk Matrix",
+short:"Trước khi triển khai giải pháp, đánh giá <strong>tác động tiềm năng</strong> (tốt và xấu) và <strong>mức độ rủi ro</strong> — để quyết định cần chuẩn bị bổ sung gì và quy mô triển khai phù hợp.",
+detail:"Ma trận tác động-rủi ro 2×2: (1) <strong>High impact, Low risk</strong>: triển khai toàn bộ ngay; (2) <strong>High impact, High risk</strong>: pilot nhỏ trước, kiểm soát chặt; (3) <strong>Low impact, Low risk</strong>: triển khai thoải mái, không ưu tiên; (4) <strong>Low impact, High risk</strong>: xem xét lại có đáng làm không. Phân tích rủi ro đầy đủ: (1) <strong>Identify risks</strong>: liệt kê tất cả điều có thể sai; (2) <strong>Probability</strong>: xác suất xảy ra; (3) <strong>Impact</strong>: hậu quả nếu xảy ra; (4) <strong>Mitigation</strong>: làm gì để giảm xác suất và impact; (5) <strong>Contingency</strong>: làm gì nếu vẫn xảy ra.",
+example:"Triển khai hệ thống thanh toán mới: High impact (cải thiện checkout) và High risk (bug có thể gây mất đơn hàng). Quyết định: pilot 5% traffic với circuit breaker tự động rollback nếu error rate >1%. Monitoring real-time. Escalation protocol rõ ràng. Sau 48 giờ pilot thành công: gradual rollout 20% → 50% → 100% trong 1 tuần.",
+takeaway:"Trước khi triển khai giải pháp quan trọng, <strong>đặt câu hỏi «Điều tệ nhất có thể xảy ra và xác suất bao nhiêu?»</strong> Nếu high risk: pilot nhỏ + circuit breaker + rollback plan. Đừng skip bước này vì áp lực thời gian — đó thường là khi rủi ro cao nhất."},
+
+{cat:"thuchien",vi:"Xây dựng coalition và thu hút ủng hộ",en:"Coalition Building",
+short:"Giải pháp tốt cần <strong>ủng hộ từ các bên liên quan</strong> để được thực thi hiệu quả — xây dựng coalition (liên minh ủng hộ) là kỹ năng quan trọng trong giải quyết vấn đề tổ chức.",
+detail:"John Kotter: <strong>«Creating urgency và building a guiding coalition»</strong> là hai bước đầu tiên không thể bỏ qua trong change management. Coalition building không phải manipulate — là tìm hiểu quan điểm, lo ngại và lợi ích của từng stakeholder, sau đó thiết kế cách thực thi giải quyết được cả vấn đề lẫn lo ngại của họ. Nguyên tắc: (1) <strong>Start with early adopters</strong>: những người đã thấy vấn đề và muốn thay đổi; (2) <strong>Understand resisters</strong>: họ thường lo ngại có lý do chính đáng; (3) <strong>Visible wins</strong>: kết quả sớm tạo momentum và thuyết phục người hoài nghi; (4) <strong>Formal và informal influencers</strong>: không chỉ title cao mới có ảnh hưởng.",
+example:"New payroll system implementation: Finance team ủng hộ (coalition), IT neutral, HR resisting (lo mất kiểm soát), Employees anxious (lo lương sai). Strategy: (1) Involve HR early trong design — address their control concerns; (2) Pilot với 1 department, communicated transparently; (3) Share metrics: zero errors, faster processing; (4) HR trở thành champion sau khi thấy kết quả. Rollout toàn công ty với HR ủng hộ thay vì resist.",
+takeaway:"Trước khi triển khai giải pháp có impact rộng, <strong>map stakeholders và phân loại: champions, neutrals, và resisters</strong>. Engage resisters sớm — họ thường có lo ngại hợp lý cần được tính vào thiết kế. Early wins nhỏ thuyết phục neutrals trở thành supporters."},
+
+{cat:"thuchien",vi:"Tư duy ưu tiên và focus",en:"Priority Focus and Essentialism",
+short:"<strong>Essentialism</strong> (Greg McKeown): discipline chủ động tìm và làm những điều quan trọng nhất, không phải làm nhiều thứ. Giải quyết vấn đề tốt đòi hỏi courage để nói không với những thứ kém quan trọng hơn.",
+detail:"McKeown: <strong>«The way of the Essentialist is the relentless pursuit of less but better.»</strong> Trong giải quyết vấn đề tổ chức: mọi thứ trông urgent, không phải mọi thứ đều important. <strong>Urgent-Important Matrix</strong> (Covey): Quadrant 2 (Important, Not Urgent) — nơi giải quyết vấn đề chiến lược, phòng ngừa, xây dựng năng lực — thường bị sacrificed cho Quadrant 1 (Important + Urgent = reactive firefighting). Essentialism trong practice: (1) Identify the «one thing» — nếu chỉ có thể làm một điều hôm nay, điều đó là gì?; (2) <strong>Say no by default</strong> với mọi thứ không phải priority hàng đầu; (3) <strong>Design away non-essentials</strong>: loại bỏ, delegate, automate.",
+example:"Warren Buffett khi được hỏi bí quyết: <strong>«Viết ra 25 mục tiêu quan trọng nhất. Chọn 5 cái quan trọng nhất. Rồi tránh xa 20 cái còn lại.»</strong> Không phải sau khi xong 5 cái quan trọng nhất mới làm 20 cái kia — tuyệt đối tránh, vì chúng đủ hấp dẫn để distract nhưng không quan trọng như 5 cái hàng đầu.",
+takeaway:"Hàng tuần, hỏi: <strong>«Nếu chỉ có thể làm một điều tuần này để giải quyết vấn đề quan trọng nhất — điều đó là gì?»</strong> Đảm bảo điều đó xảy ra trước. Mọi thứ khác là secondary. Courage của Essentialism là nói không với những thứ tốt để có thể làm những thứ tốt nhất."},
+,
+{cat:"mohinh",vi:"Mô hình Entropy và xu hướng suy thoái",en:"Entropy Model",
+short:"<strong>Entropy (nhiệt động lực học thứ hai)</strong> áp dụng vào tổ chức: hệ thống có xu hướng tự nhiên đi từ trật tự sang hỗn loạn. Giải quyết vấn đề tốt cần nỗ lực liên tục để chống lại entropy.",
+detail:"Định luật thứ hai nhiệt động lực học: entropy trong hệ thống cô lập tự nhiên tăng theo thời gian. Áp dụng cho tổ chức: quy trình tốt nếu không được maintain sẽ dần bị erosion; team tốt nếu không được nuôi dưỡng sẽ xuống cấp; sản phẩm tốt nếu không được cải tiến sẽ lỗi thời. <strong>Hệ quả cho giải quyết vấn đề</strong>: (1) Không có giải pháp «vĩnh cửu» — mọi giải pháp đều cần được maintain và cập nhật; (2) Phần lớn công việc quản lý là <strong>chống lại entropy</strong> — maintain standards, re-enforce culture, update processes; (3) Dấu hiệu entropy: quy trình bị tắt dần, quality slip, technical debt tích lũy. Biện pháp: regular reviews, systematic maintenance, và cultural reinforcement liên tục.",
+example:"Wikipedia: năm 2001, mọi article được viết bởi enthusiastic contributors với chuẩn cao. Entropy tự nhiên: sau 20 năm, không có maintenance → nhiều article sẽ lỗi thời, vandalism tích lũy. Solution: hệ thống editors volunteer liên tục update và maintain. Entropy không được giải quyết một lần — nó đòi hỏi ongoing effort.",
+takeaway:"Sau khi giải quyết vấn đề, <strong>lập kế hoạch maintenance ngay</strong>: «Ai sẽ monitor? Bao giờ review? Dấu hiệu nào cho thấy giải pháp đang xuống cấp?» Một giải pháp không có maintenance plan sẽ tự nhiên degradate theo thời gian."},
+
+{cat:"nguyen",vi:"Phân tích nguyên nhân hệ thống (Systems Cause Analysis)",en:"Systems Cause Analysis",
+short:"Tìm nguyên nhân không chỉ ở cấp độ sự kiện mà ở <strong>cấp độ hệ thống</strong> — cấu trúc, quy trình, văn hóa, và incentives tạo ra điều kiện cho vấn đề xảy ra và tái phát.",
+detail:"Iceberg Model trong systems thinking: phần nổi là <strong>Events</strong> (sự kiện cụ thể, dễ thấy); dưới bề mặt là <strong>Patterns</strong> (xu hướng theo thời gian); sâu hơn là <strong>Structures</strong> (cơ cấu hệ thống); sâu nhất là <strong>Mental Models</strong> (mô hình tư duy tạo ra cơ cấu đó). Phần lớn «giải quyết vấn đề» chỉ ở cấp Event — vá sự kiện. Giải pháp bền vững đòi hỏi can thiệp ở cấp Structure và Mental Models. Câu hỏi để đi sâu: «Cấu trúc/quy trình/incentive nào tạo ra pattern này?» và «Mental model nào tạo ra cấu trúc đó?»",
+example:"Nhân viên thường xuyên skip quy trình QC (Event). Pattern: xảy ra khi áp lực deadline cao. Structure: KPI đo thời gian hoàn thành task, không đo quality rate. Mental model của quản lý: «speed là ưu tiên hàng đầu». Can thiệp sai: nhắc nhở nhân viên follow process (Event level) → không bền. Can thiệp đúng: thay đổi KPI để balance speed và quality (Structure level) + thay đổi mental model về ưu tiên (Mental model level).",
+takeaway:"Khi vấn đề tái phát dù đã can thiệp nhiều lần, <strong>đào sâu hơn trong Iceberg Model</strong>: «Pattern nào dẫn đến event này? Structure nào tạo ra pattern? Mental model nào tạo ra structure?» Can thiệp ở cấp structure và mental model, không chỉ event."},
+
+{cat:"sangtao",vi:"Phương pháp TRIZ — Lý thuyết giải quyết mâu thuẫn",en:"TRIZ — Theory of Inventive Problem Solving",
+short:"<strong>TRIZ</strong> (Genrich Altshuller, Liên Xô): hệ thống 40 nguyên lý sáng tạo từ phân tích 400.000 bằng sáng chế — đặc biệt hiệu quả khi vấn đề chứa <strong>mâu thuẫn (contradictions)</strong> mà các giải pháp thông thường không giải được.",
+detail:"Altshuller phát hiện: hầu hết sáng chế quan trọng đều giải quyết một trong 40 nguyên lý TRIZ. Cơ chế cốt lõi: <strong>Technical contradictions</strong> — cải thiện tham số A làm xấu đi tham số B; <strong>Physical contradictions</strong> — cùng một vật cần đồng thời có và không có một tính chất. Ví dụ nguyên lý TRIZ: (1) <strong>Segmentation</strong>: chia nhỏ đối tượng; (2) <strong>Preliminary action</strong>: thực hiện trước; (3) <strong>Inversion</strong>: làm ngược lại; (4) <strong>Nested doll</strong>: đặt một đối tượng vào bên trong đối tượng khác. Ứng dụng rộng hơn engineering: giải quyết business contradictions («tăng quality vs giảm chi phí», «tăng tốc độ vs giảm lỗi»).",
+example:"Mâu thuẫn: xe buýt cần đủ chỗ ngồi (large) nhưng cũng cần linh hoạt trên phố hẹp (small). TRIZ nguyên lý Nested Doll + Segmentation: xe buýt khớp nối (articulated bus) — hai phần kết nối linh hoạt, mỗi phần nhỏ hơn nhưng tổng diện tích lớn hơn. Business contradiction: «cần nhân viên chuyên sâu (specialist) nhưng cũng cần linh hoạt (generalist)» → T-shaped skills model.",
+takeaway:"Khi gặp vấn đề tưởng như mâu thuẫn không thể giải — thay vì chọn một trong hai, <strong>hỏi: «Có nguyên lý nào cho phép có cả hai không?»</strong> TRIZ 40 nguyên lý là thư viện các pattern đã được kiểm chứng để giải quyết mâu thuẫn kỹ thuật và kinh doanh."}
+
+];
+
+const CAT_MAP={};
+CATS.forEach(c=>CAT_MAP[c.key]=c);
+
+const chipsEl=document.getElementById('chips');
+let activeCat='all';
+let activeCard=null;
+
+function renderChips(){
+  chipsEl.innerHTML='';
+  const allC=document.createElement('div');
+  allC.className='chip'+(activeCat==='all'?' active':'');
+  allC.innerHTML='<span class="dot" style="--dotcolor:#999"></span> Tất cả';
+  allC.onclick=()=>{activeCat='all';renderChips();renderGrid();};
+  chipsEl.appendChild(allC);
+  CATS.forEach(c=>{
+    const chip=document.createElement('div');
+    chip.className='chip'+(activeCat===c.key?' active':'');
+    chip.style.setProperty('--dotcolor',c.color);
+    chip.innerHTML=`<span class="dot"></span> ${c.label}`;
+    chip.onclick=()=>{activeCat=c.key;renderChips();renderGrid();};
+    chipsEl.appendChild(chip);
+  });
+}
+
+const gridEl=document.getElementById('grid');
+const noResultsEl=document.getElementById('noResults');
+const countRowEl=document.getElementById('countRow');
+let filtered=[];
+
+function renderGrid(){
+  const q=document.getElementById('search').value.trim().toLowerCase();
+  activeCard=null;
+  filtered=DATA.map((d,i)=>({...d,idx:i})).filter(d=>{
+    const matchCat=activeCat==='all'||d.cat===activeCat;
+    const text=(d.vi+' '+d.en+' '+d.short+' '+d.detail).toLowerCase();
+    return matchCat&&(q===''||text.includes(q));
+  });
+  gridEl.innerHTML='';
+  noResultsEl.style.display=filtered.length===0?'block':'none';
+
+  filtered.forEach((d,di)=>{
+    const cat=CAT_MAP[d.cat];
+    const card=document.createElement('div');
+    card.className='card';
+    card.style.setProperty('--cc',cat.color);
+
+    card.innerHTML=`
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-num">#${String(d.idx+1).padStart(3,'0')}</span>
+          <span class="cat-badge">${cat.label}</span>
+        </div>
+        <div class="card-title">${d.vi}</div>
+        <div class="card-en">${d.en}</div>
+        <div class="card-short">${d.short}</div>
+        <div class="card-toggle" id="toggle-${di}">
+          Xem chi tiết
+          <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+      <div class="card-body" id="body-${di}">
+        <div class="card-body-inner">
+          <div class="section">
+            <div class="section-label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              Giải thích
+            </div>
+            <div class="section-text">${d.detail}</div>
+          </div>
+          <div class="section">
+            <div class="section-label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              Ví dụ thực tế
+            </div>
+            <div class="example-box">${d.example}</div>
+          </div>
+          <div class="section">
+            <div class="section-label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Điểm mấu chốt
+            </div>
+            <div class="takeaway-box">${d.takeaway}</div>
+          </div>
+        </div>
+      </div>`;
+    gridEl.appendChild(card);
+  });
+
+  countRowEl.textContent=`Hiển thị ${filtered.length} / ${DATA.length} khái niệm`;
+}
+
+function setToggleText(toggle,isOpen){
+  toggle.innerHTML=isOpen
+    ?'Thu gọn <svg class="arr open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>'
+    :'Xem chi tiết <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
+  toggle.classList.toggle('open',isOpen);
+}
+
+function closeCard(card){
+  card.querySelector('.card-body').classList.remove('open');
+  setToggleText(card.querySelector('.card-toggle'),false);
+}
+
+function openCard(card){
+  card.querySelector('.card-body').classList.add('open');
+  setToggleText(card.querySelector('.card-toggle'),true);
+  setTimeout(()=>{
+    const rect=card.getBoundingClientRect();
+    if(rect.top<80) card.scrollIntoView({behavior:'smooth',block:'nearest'});
+  },60);
+}
+
+function toggleCard(header){
+  const card=header.parentElement;
+  const isOpen=card.querySelector('.card-body').classList.contains('open');
+  if(activeCard&&activeCard!==card){closeCard(activeCard);activeCard=null;}
+  if(isOpen){closeCard(card);activeCard=null;}
+  else{openCard(card);activeCard=card;}
+}
+
+document.getElementById('search').addEventListener('input',renderGrid);
+renderChips();
+renderGrid();
+</script>
+</body>
+</html>
